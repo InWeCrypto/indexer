@@ -1,0 +1,11 @@
+{
+    "aliyun": {
+        "kafka": {
+            "user": "xxxxxxxxx",
+            "password": "xxxxxxxx",
+            "cert": "testdata/root.cer",
+            "servers": ["xxx:8080"],
+            "topic": "xxxxxx"
+        }
+    }
+}
