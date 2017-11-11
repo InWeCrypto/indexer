@@ -30,7 +30,7 @@ func main() {
 		return
 	}
 
-	indexer, err := neo.NewIndexer(neocnf, producer)
+	indexer, err := neo.NewMonitor(neocnf, producer)
 
 	if err != nil {
 		logger.ErrorF("create neo indexer err , %s", err)
