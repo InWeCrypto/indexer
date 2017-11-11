@@ -16,7 +16,7 @@ func main() {
 
 	flag.Parse()
 
-	neocnf, err := config.NewFromFile("./neo.json")
+	neocnf, err := config.NewFromFile(*configpath)
 
 	if err != nil {
 		logger.ErrorF("load neo config err , %s", err)
