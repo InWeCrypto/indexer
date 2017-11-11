@@ -22,4 +22,5 @@ neo/testdb
 
 cmd/neo/neo.json
 cmd/neo/neo
+cmd/neo/testdb
 .DS_Store
