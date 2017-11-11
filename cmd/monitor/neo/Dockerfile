@@ -8,4 +8,6 @@ RUN go install github.com/inwecrypto/indexer/cmd/monitor/neo && rm -rf /go/src
 
 VOLUME ["/etc/inwecrypto/indexer/"]
 
-CMD ["/go/bin/neo","/etc/inwecrypto/indexer/neo.json"]
+WORKDIR /etc/inwecrypto/indexer/
+
+CMD ["/go/bin/neo","--conf","/etc/inwecrypto/indexer/neo.json"]
