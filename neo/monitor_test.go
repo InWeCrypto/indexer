@@ -17,23 +17,23 @@ func init() {
 }
 
 type testProducer struct {
-	indexer *Indexer
+	Monitor *Monitor
 }
 
 func (producer *testProducer) Produce(topic string, key []byte, content interface{}) error {
 	logger.DebugF("topic %s", topic)
-	producer.indexer.Stop()
+	producer.Monitor.Stop()
 	return nil
 }
 
-func TestIndexer(t *testing.T) {
+func TestMonitor(t *testing.T) {
 	producer := &testProducer{}
 
-	indexer, err := NewIndexer(neocnf, producer)
+	Monitor, err := NewMonitor(neocnf, producer)
 
-	producer.indexer = indexer
+	producer.Monitor = Monitor
 
 	assert.NoError(t, err)
 
-	indexer.Run()
+	Monitor.Run()
 }

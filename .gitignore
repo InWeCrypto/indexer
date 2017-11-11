@@ -20,7 +20,7 @@ neo/test.json
 neo/neo.json
 neo/testdb
 
-cmd/neo/neo.json
-cmd/neo/neo
-cmd/neo/testdb
+cmd/monitor/neo/neo.json
+cmd/monitor/neo/neo
+cmd/monitor/neo/testdb
 .DS_Store
