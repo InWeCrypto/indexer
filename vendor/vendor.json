@@ -22,6 +22,12 @@
 			"revisionTime": "2014-10-03T03:48:18Z"
 		},
 		{
+			"checksumSHA1": "NykgODYqok9ED1APp7mmN5w3GTg=",
+			"path": "github.com/bsm/sarama-cluster",
+			"revision": "80bf98f4ce392286976f7705155aa13763bcfd8a",
+			"revisionTime": "2017-11-09T17:38:15Z"
+		},
+		{
 			"checksumSHA1": "oQgLy8KmIOVov04WXH7KgU1bszc=",
 			"origin": "github.com/inwecrypto/cryptox/vendor/github.com/btcsuite/btcutil/base58",
 			"path": "github.com/btcsuite/btcutil/base58",

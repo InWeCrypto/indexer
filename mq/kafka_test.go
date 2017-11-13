@@ -1,6 +1,7 @@
 package mq
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,17 @@ func TestKafkaProducer(t *testing.T) {
 
 	assert.NoError(t, err)
 
-	err = producer.Produce(cnf.GetString("aliyun.kafka.topic", "xxx"), []byte("1"), "")
+	err = producer.Produce(cnf.GetString("aliyun.kafka.topic", "xxx"), []byte("1"), "test")
 
 	assert.NoError(t, err)
+
+	consumer, err := NewAliyunConsumer(cnf)
+
+	assert.NoError(t, err)
+
+	message, ok := <-consumer.Messages()
+
+	assert.True(t, ok)
+
+	fmt.Println(string(message.Value()))
 }

@@ -76,7 +76,7 @@ func TestBlockCount(t *testing.T) {
 func TestBlockByIndex(t *testing.T) {
 	client := NewClient(cnf.GetString("mainnode", "xxxxx"))
 
-	block, err := client.GetBlockByIndex(1563749)
+	block, err := client.GetBlockByIndex(3)
 
 	assert.NoError(t, err)
 
@@ -88,7 +88,7 @@ func TestBlockByIndex(t *testing.T) {
 func TestGetRawTransaction(t *testing.T) {
 	client := NewClient(cnf.GetString("mainnode", "xxxxx"))
 
-	block, err := client.GetRawTransaction("0x3cb099f119d120cd22772c780a77bfe6a7fb4090d3a6da974f97ce3fa14411a7")
+	block, err := client.GetRawTransaction("83a24cf2acaf207eb436590a7aaaefa03ae9b7d629e20d93a3d7edb8f0458eb6")
 
 	assert.NoError(t, err)
 
