@@ -76,6 +76,10 @@ func (etl *ETL) Run() {
 
 				etl.consumer.Commit(message)
 			}
+		case err, ok := <-etl.consumer.Errors():
+			if ok {
+				logger.ErrorF("mq consumer detech err :%s", err)
+			}
 		case <-ticker.C:
 			logger.DebugF("etl consumer chan timeout")
 		}
