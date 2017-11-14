@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"time"
 
@@ -60,7 +61,14 @@ func (config *Config) Get(path string) Value {
 
 // GetObject get config value as object
 func (config *Config) GetObject(path string, v interface{}) error {
-	bytes, err := json.Marshal(config.container.Path(path).Data())
+
+	value, ok := config.tryGet(path)
+
+	if !ok {
+		return fmt.Errorf("config %s not found", path)
+	}
+
+	bytes, err := json.Marshal(value)
 
 	if err != nil {
 		return err
@@ -69,15 +77,29 @@ func (config *Config) GetObject(path string, v interface{}) error {
 	return json.Unmarshal(bytes, v)
 }
 
+func (config *Config) tryGet(path string) (Value, bool) {
+
+	if config.Has(path) {
+		return config.container.Path(path).Data(), true
+	}
+
+	return nil, false
+}
+
 // GetInt64 get config value as Int
 func (config *Config) GetInt64(path string, defaultval int64) int64 {
-	value, ok := config.container.Path(path).Data().(float64)
+
+	value, ok := config.tryGet(path)
 
 	if !ok {
 		return defaultval
 	}
 
-	return int64(value)
+	if val, ok := value.(int64); ok {
+		return val
+	}
+
+	return defaultval
 }
 
 // GetDuration fetch config value as time.Duration
@@ -87,13 +109,17 @@ func (config *Config) GetDuration(path string, defaultval time.Duration) time.Du
 
 // GetString get config value as Int
 func (config *Config) GetString(path string, defaultval string) string {
-	value, ok := config.container.Path(path).Data().(string)
+	value, ok := config.tryGet(path)
 
 	if !ok {
 		return defaultval
 	}
 
-	return value
+	if val, ok := value.(string); ok {
+		return val
+	}
+
+	return defaultval
 }
 
 // Has check if has config item indicate by path

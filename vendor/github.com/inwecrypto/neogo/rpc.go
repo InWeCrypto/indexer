@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/goany/slf4go"
+	"github.com/dynamicgo/slf4go"
 	"github.com/inwecrypto/jsonrpc"
 )
 

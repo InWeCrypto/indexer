@@ -4,7 +4,7 @@ import (
 	"flag"
 
 	"github.com/dynamicgo/config"
-	"github.com/goany/slf4go"
+	"github.com/dynamicgo/slf4go"
 	"github.com/inwecrypto/neo-indexer/neo"
 )
 
