@@ -5,7 +5,7 @@ import (
 
 	"github.com/dynamicgo/config"
 	"github.com/goany/slf4go"
-	"github.com/inwecrypto/indexer/neo"
+	"github.com/inwecrypto/neo-indexer/neo"
 )
 
 var logger = slf4go.Get("neo-indexer")
