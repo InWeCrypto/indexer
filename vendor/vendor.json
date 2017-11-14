@@ -10,31 +10,6 @@
 			"revisionTime": "2017-11-09T09:07:58Z"
 		},
 		{
-			"checksumSHA1": "vqTaEZndZ4SQNNX1nqQ36s4odgg=",
-			"path": "github.com/Shopify/sarama",
-			"revision": "b305748200a6396c34b89fe5dacc768cb1a7ea69",
-			"revisionTime": "2017-11-03T13:13:09Z"
-		},
-		{
-			"checksumSHA1": "qj/5CGiF+Dsd1/gzKl+8hQ5ByHU=",
-			"path": "github.com/apisit/rfc6979",
-			"revision": "6a90f24967ebb1aa57b22f74a13dbb3faad8cf3d",
-			"revisionTime": "2014-10-03T03:48:18Z"
-		},
-		{
-			"checksumSHA1": "NykgODYqok9ED1APp7mmN5w3GTg=",
-			"path": "github.com/bsm/sarama-cluster",
-			"revision": "80bf98f4ce392286976f7705155aa13763bcfd8a",
-			"revisionTime": "2017-11-09T17:38:15Z"
-		},
-		{
-			"checksumSHA1": "oQgLy8KmIOVov04WXH7KgU1bszc=",
-			"origin": "github.com/inwecrypto/cryptox/vendor/github.com/btcsuite/btcutil/base58",
-			"path": "github.com/btcsuite/btcutil/base58",
-			"revision": "cd0332775898bb7b02813e2571a09da21ab70559",
-			"revisionTime": "2017-11-05T04:52:48Z"
-		},
-		{
 			"checksumSHA1": "mrz/kicZiUaHxkyfvC/DyQcr8Do=",
 			"path": "github.com/davecgh/go-spew/spew",
 			"revision": "adab96458c51a58dc1783b3335dcce5461522e75",
@@ -53,24 +28,6 @@
 			"revisionTime": "2017-09-07T09:23:55Z"
 		},
 		{
-			"checksumSHA1": "y2Kh4iPlgCPXSGTCcFpzePYdzzg=",
-			"path": "github.com/eapache/go-resiliency/breaker",
-			"revision": "b1fe83b5b03f624450823b751b662259ffc6af70",
-			"revisionTime": "2017-06-07T16:36:15Z"
-		},
-		{
-			"checksumSHA1": "WHl96RVZlOOdF4Lb1OOadMpw8ls=",
-			"path": "github.com/eapache/go-xerial-snappy",
-			"revision": "bb955e01b9346ac19dc29eb16586c90ded99a98c",
-			"revisionTime": "2016-06-09T14:24:08Z"
-		},
-		{
-			"checksumSHA1": "oCCs6kDanizatplM5e/hX76busE=",
-			"path": "github.com/eapache/queue",
-			"revision": "44cc805cf13205b55f69e14bcb69867d1ae92f98",
-			"revisionTime": "2016-08-05T00:47:13Z"
-		},
-		{
 			"checksumSHA1": "/dtdwt1sRwJY3iQYu2hnR+zRzDI=",
 			"path": "github.com/goany/slf4go",
 			"revision": "73ea855627583a86e254d3fbec479b4a69fc5bc5",
@@ -83,34 +40,22 @@
 			"revisionTime": "2017-02-15T23:32:05Z"
 		},
 		{
-			"checksumSHA1": "91Oly7JPakBVQV/1U2cc6FmyFDU=",
-			"path": "github.com/inwecrypto/cryptox/btc",
-			"revision": "cd0332775898bb7b02813e2571a09da21ab70559",
-			"revisionTime": "2017-11-05T04:52:48Z"
-		},
-		{
-			"checksumSHA1": "DaTFRKHYU9CuTcVSZ+UNX5hFfVI=",
-			"path": "github.com/inwecrypto/cryptox/keystore",
-			"revision": "cd0332775898bb7b02813e2571a09da21ab70559",
-			"revisionTime": "2017-11-05T04:52:48Z"
-		},
-		{
-			"checksumSHA1": "0kKv5YH+8B+FIHx2xWDm4imjNPQ=",
-			"path": "github.com/inwecrypto/cryptox/neo",
-			"revision": "cd0332775898bb7b02813e2571a09da21ab70559",
-			"revisionTime": "2017-11-05T04:52:48Z"
-		},
-		{
-			"checksumSHA1": "wE+gXQEqJ//GRtXB56Ny05DZxQ8=",
-			"path": "github.com/inwecrypto/cryptox/sha3",
-			"revision": "cd0332775898bb7b02813e2571a09da21ab70559",
-			"revisionTime": "2017-11-05T04:52:48Z"
+			"checksumSHA1": "rM4S8j2jSDCRwRP93uKeDMdQBa4=",
+			"path": "github.com/inwecrypto/gomq",
+			"revision": "52e0a010c834d0d321578c72e7efe398c4bf2416",
+			"revisionTime": "2017-11-14T03:21:41Z"
 		},
 		{
 			"checksumSHA1": "RROIAUNEsm4vOuHEDwi76eK/TJ4=",
 			"path": "github.com/inwecrypto/jsonrpc",
 			"revision": "76c20b913878f1d6110cafcd158fdfea9445b37d",
 			"revisionTime": "2017-11-06T09:04:15Z"
+		},
+		{
+			"checksumSHA1": "Te3rkj8Ywg9ikgbt6m5qhG5iqw8=",
+			"path": "github.com/inwecrypto/neogo",
+			"revision": "a6eb2fe83b75f1b5796bf6647a9ed05bca9efd0f",
+			"revisionTime": "2017-11-14T02:59:41Z"
 		},
 		{
 			"checksumSHA1": "3HVfwgLpCDH8JX211UWdrSi/GU4=",
@@ -125,36 +70,11 @@
 			"revisionTime": "2017-10-22T19:20:43Z"
 		},
 		{
-			"checksumSHA1": "Se195FlZ160eaEk/uVx4KdTPSxU=",
-			"origin": "github.com/inwecrypto/cryptox/vendor/github.com/pborman/uuid",
-			"path": "github.com/pborman/uuid",
-			"revision": "cd0332775898bb7b02813e2571a09da21ab70559",
-			"revisionTime": "2017-11-05T04:52:48Z"
-		},
-		{
-			"checksumSHA1": "FGg99nQ56Fo3radSCuU1AeEUJug=",
-			"path": "github.com/pierrec/lz4",
-			"revision": "08c27939df1bd95e881e2c2367a749964ad1fceb",
-			"revisionTime": "2017-08-28T19:29:35Z"
-		},
-		{
-			"checksumSHA1": "zPWRjzsPeXCoqmidIcJtHbvrvRs=",
-			"path": "github.com/pierrec/xxHash/xxHash32",
-			"revision": "a0006b13c722f7f12368c00a3d3c2ae8a999a0c6",
-			"revisionTime": "2017-07-14T08:24:55Z"
-		},
-		{
 			"checksumSHA1": "zKKp5SZ3d3ycKe4EKMNT0BqAWBw=",
 			"origin": "github.com/stretchr/testify/vendor/github.com/pmezard/go-difflib/difflib",
 			"path": "github.com/pmezard/go-difflib/difflib",
 			"revision": "890a5c3458b43e6104ff5da8dfa139d013d77544",
 			"revisionTime": "2017-07-05T02:17:15Z"
-		},
-		{
-			"checksumSHA1": "KAzbLjI9MzW2tjfcAsK75lVRp6I=",
-			"path": "github.com/rcrowley/go-metrics",
-			"revision": "1f30fe9094a513ce4c700b9a54458bbb0c96996c",
-			"revisionTime": "2016-11-28T21:05:44Z"
 		},
 		{
 			"checksumSHA1": "mGbTYZ8dHVTiPTTJu3ktp+84pPI=",
@@ -233,28 +153,7 @@
 			"path": "github.com/syndtr/goleveldb/leveldb/util",
 			"revision": "549b6d6b1c0419617182954dd77770f2e2685ed5",
 			"revisionTime": "2017-11-05T03:26:30Z"
-		},
-		{
-			"checksumSHA1": "1MGpGDQqnUoRpv7VEcQrXOBydXE=",
-			"origin": "github.com/inwecrypto/cryptox/vendor/golang.org/x/crypto/pbkdf2",
-			"path": "golang.org/x/crypto/pbkdf2",
-			"revision": "cd0332775898bb7b02813e2571a09da21ab70559",
-			"revisionTime": "2017-11-05T04:52:48Z"
-		},
-		{
-			"checksumSHA1": "y/oIaxq2d3WPizRZfVjo8RCRYTU=",
-			"origin": "github.com/inwecrypto/cryptox/vendor/golang.org/x/crypto/ripemd160",
-			"path": "golang.org/x/crypto/ripemd160",
-			"revision": "cd0332775898bb7b02813e2571a09da21ab70559",
-			"revisionTime": "2017-11-05T04:52:48Z"
-		},
-		{
-			"checksumSHA1": "0NcipKj1ECwxiIrEHQ0wdoL54Sc=",
-			"origin": "github.com/inwecrypto/cryptox/vendor/golang.org/x/crypto/scrypt",
-			"path": "golang.org/x/crypto/scrypt",
-			"revision": "cd0332775898bb7b02813e2571a09da21ab70559",
-			"revisionTime": "2017-11-05T04:52:48Z"
 		}
 	],
-	"rootPath": "github.com/inwecrypto/indexer"
+	"rootPath": "github.com/inwecrypto/neo-indexer"
 }
