@@ -67,7 +67,7 @@ func (etl *ETL) processBlock(block *neogo.Block) (err error) {
 		return
 	}
 
-	if err = etl.marktedVinUTXO(dbTx, block); err != nil {
+	if err = etl.spendUTXO(dbTx, block); err != nil {
 		return
 	}
 
@@ -80,7 +80,7 @@ func (etl *ETL) processBlock(block *neogo.Block) (err error) {
 
 func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	var stmt *sql.Stmt
-	stmt, err = dbTx.Prepare(pq.CopyIn(etl.tbtx, "tx", "address", "type", "assert"))
+	stmt, err = dbTx.Prepare(pq.CopyIn(etl.tbtx, "tx", "address", "type", "assert", "updateTime"))
 
 	if err != nil {
 		logger.ErrorF("tx bulk prepare error :%s", err)
@@ -102,7 +102,7 @@ func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 
 			logger.DebugF("tx %s vout %d ", tx.ID, vout.N)
 
-			_, err = stmt.Exec(tx.ID, vout.Address, tx.Type, vout.Asset)
+			_, err = stmt.Exec(tx.ID, vout.Address, tx.Type, vout.Asset, time.Unix(block.Time, 0).Format(time.RFC3339))
 
 			if err != nil {
 				logger.ErrorF("tx insert error :%s", err)
@@ -120,10 +120,10 @@ func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	return
 }
 
-func (etl *ETL) marktedVinUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
+func (etl *ETL) spendUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	var stmt *sql.Stmt
 
-	sqlStr := fmt.Sprintf(`update %s set "used"=TRUE where "tx"=$1 and "n"=$2`, etl.tbutxo)
+	sqlStr := fmt.Sprintf(`update %s set "spentTime"=$1 where "tx"=$2 and "n"=$3`, etl.tbutxo)
 
 	stmt, err = dbTx.Prepare(sqlStr)
 
@@ -138,7 +138,11 @@ func (etl *ETL) marktedVinUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 
 	for _, tx := range block.Transactions {
 		for _, vin := range tx.Vin {
-			_, err := stmt.Exec(vin.TransactionID, vin.Vout)
+			_, err := stmt.Exec(
+				time.Unix(block.Time, 0).Format(time.RFC3339),
+				vin.TransactionID,
+				vin.Vout,
+			)
 
 			if err != nil {
 				logger.ErrorF("market utxo exec error :%s\n\tvin :%v", err, vin)

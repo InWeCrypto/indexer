@@ -1,3 +1,4 @@
+DROP INDEX IF EXISTS NEO_TX_BLOCKS;
 DROP INDEX IF EXISTS NEO_TX_TYPE;
 DROP INDEX IF EXISTS NEO_TX_UID;
 DROP INDEX IF EXISTS NEO_TX_ASSET;
@@ -5,6 +6,8 @@ DROP TABLE IF EXISTS NEO_TX;
 
 
 DROP INDEX IF EXISTS NEO_UTXO_UID;
+DROP INDEX IF EXISTS NEO_UTXO_ASSET;
+DROP INDEX IF EXISTS NEO_UTXO_BLOCKS;
 DROP TABLE IF EXISTS NEO_UTXO;
 
 
@@ -13,8 +16,8 @@ CREATE TABLE NEO_UTXO (
   "tx"         VARCHAR(128) NOT NULL, -- tx by which the utxo created
   "n"          INT          NOT NULL,
   "address"    VARCHAR(128) NOT NULL, -- value out address
+  "blocks"     BIGINT       NOT NULL, -- tx packaged block number
   "assert"     VARCHAR(128) NOT NULL, -- asset type string
-  "used"       BOOLEAN      NOT NULL         DEFAULT FALSE, -- used flag
   "value"      NUMERIC      NOT NULL, -- utxo value
   "json"       JSONB        NOT NULL, -- raw data of utxo format as json
   "createTime" TIMESTAMP    NOT NULL, -- utxo create time
@@ -27,14 +30,18 @@ CREATE INDEX NEO_UTXO_UID
 CREATE INDEX NEO_UTXO_ASSET
   ON NEO_UTXO (assert);
 
+CREATE INDEX NEO_UTXO_BLOCKS
+  ON NEO_UTXO (blocks);
+
 
 CREATE TABLE NEO_TX (
   "id"         SERIAL PRIMARY KEY,
+  "blocks"     BIGINT       NOT NULL, -- tx packaged block number
   "tx"         VARCHAR(128) NOT NULL, -- tx by which the utxo created
   "address"    VARCHAR(128) NOT NULL, -- value out address
   "type"       VARCHAR(64)  NOT NULL, -- tx type
   "assert"     VARCHAR(128) NOT NULL, -- asset type string
-  "updateTime" TIMESTAMP    NOT NULL NOT NULL DEFAULT NOW()-- update time
+  "updateTime" TIMESTAMP    NOT NULL-- update time
 );
 
 CREATE INDEX NEO_TX_UID
@@ -44,3 +51,6 @@ CREATE INDEX NEO_TX_TYPE
 
 CREATE INDEX NEO_TX_ASSET
   ON NEO_TX (assert);
+
+CREATE INDEX NEO_TX_BLOCKS
+  ON NEO_TX (blocks);
