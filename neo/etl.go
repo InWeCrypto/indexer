@@ -156,7 +156,7 @@ func (etl *ETL) spendUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 
 func (etl *ETL) bulkInsertUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	var stmt *sql.Stmt
-	stmt, err = dbTx.Prepare(pq.CopyIn(etl.tbutxo, "tx", "n", "address", "assert", "value", "json", "createTime"))
+	stmt, err = dbTx.Prepare(pq.CopyIn(etl.tbutxo, "tx", "n", "address", "assert", "blocks", "value", "json", "createTime"))
 
 	if err != nil {
 		logger.ErrorF("utxo bulk prepare error :%s", err)
@@ -186,6 +186,7 @@ func (etl *ETL) bulkInsertUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 				vout.N,
 				vout.Address,
 				vout.Asset,
+				block.Index,
 				vout.Value,
 				string(json),
 				time.Unix(block.Time, 0).Format(time.RFC3339),
