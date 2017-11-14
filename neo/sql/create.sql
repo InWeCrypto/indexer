@@ -17,7 +17,8 @@ CREATE TABLE NEO_UTXO (
   "used"       BOOLEAN      NOT NULL         DEFAULT FALSE, -- used flag
   "value"      NUMERIC      NOT NULL, -- utxo value
   "json"       JSONB        NOT NULL, -- raw data of utxo format as json
-  "updateTime" TIMESTAMP    NOT NULL         DEFAULT NOW()-- update time
+  "createTime" TIMESTAMP    NOT NULL, -- utxo create time
+  "spentTime"  TIMESTAMP -- utxo spent time
 );
 
 CREATE INDEX NEO_UTXO_UID

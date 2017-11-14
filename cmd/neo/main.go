@@ -5,7 +5,6 @@ import (
 
 	"github.com/dynamicgo/config"
 	"github.com/goany/slf4go"
-	"github.com/inwecrypto/indexer/mq"
 	"github.com/inwecrypto/indexer/neo"
 )
 
@@ -23,20 +22,20 @@ func main() {
 		return
 	}
 
-	consumer, err := mq.NewAliyunConsumer(neocnf)
+	etl, err := neo.NewETL(neocnf)
 
 	if err != nil {
-		logger.ErrorF("create mq consumer err , %s", err)
+		logger.ErrorF("create neo etl err , %s", err)
 		return
 	}
 
-	indexer, err := neo.NewETL(neocnf, consumer)
+	monitor, err := neo.NewMonitor(neocnf, etl)
 
 	if err != nil {
-		logger.ErrorF("create neo dbwriter err , %s", err)
+		logger.ErrorF("create neo monitor err , %s", err)
 		return
 	}
 
-	indexer.Run()
+	monitor.Run()
 
 }

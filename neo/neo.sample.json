@@ -1,0 +1,21 @@
+{
+    "monitor": {
+        "localdb": "./testdb",
+        "rpc": "http://localhost:20332",
+        "topic": "xxxxx"
+    },
+    "dbwriter": {
+        "database": {
+            "driver": "xxxxx",
+            "port": "xxxxx",
+            "host": "xxxxxxxxxx",
+            "schema": "xxxxx",
+            "username": "xxxxx",
+            "password": "xxxxx"
+        },
+        "tables": {
+            "utxo": "xxxxx",
+            "tx": "xxxxx"
+        }
+    }
+}

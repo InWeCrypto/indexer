@@ -4,29 +4,23 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"sync"
 	"time"
 
 	"github.com/dynamicgo/config"
-	"github.com/inwecrypto/indexer/mq"
+	"github.com/inwecrypto/neogo"
 	"github.com/lib/pq"
 )
 
 // ETL neo indexer builtin etl service
 type ETL struct {
-	db       *sql.DB     // indexer database
-	consumer mq.Consumer // tx mq
-	rpc      *Client     // neo client
-	tbutxo   string      // utxo table
-	tbtx     string      //tx table
-	stop     bool
-	mutex    sync.Mutex
-	cached   chan mq.Message // message chan
-	cnf      *config.Config
+	db     *sql.DB       // indexer database
+	rpc    *neogo.Client // neo client
+	tbutxo string        // utxo table
+	tbtx   string        //tx table
 }
 
 // NewETL create new etl
-func NewETL(cnf *config.Config, consumer mq.Consumer) (*ETL, error) {
+func NewETL(cnf *config.Config) (*ETL, error) {
 	db, err := openDB(cnf)
 
 	if err != nil {
@@ -34,66 +28,20 @@ func NewETL(cnf *config.Config, consumer mq.Consumer) (*ETL, error) {
 	}
 
 	etl := &ETL{
-		consumer: consumer,
-		db:       db,
-		tbutxo:   cnf.GetString("dbwriter.tables.utxo", "NEO_UTXO"),
-		tbtx:     cnf.GetString("dbwriter.tables.tx", "NEO_TX"),
-		cnf:      cnf,
+		db:     db,
+		tbutxo: cnf.GetString("dbwriter.tables.utxo", "NEO_UTXO"),
+		tbtx:   cnf.GetString("dbwriter.tables.tx", "NEO_TX"),
 	}
 
 	return etl, nil
 }
 
-// Run start etl
-func (etl *ETL) Run() {
-
-	etl.mutex.Lock()
-	etl.stop = false
-
-	etl.mutex.Unlock()
-
-	ticker := time.NewTicker(time.Second)
-
-	defer ticker.Stop()
-
-	for !etl.stop {
-		select {
-		case message, ok := <-etl.consumer.Messages():
-			if ok {
-				var block *Block
-
-				if err := json.Unmarshal(message.Value(), &block); err != nil {
-					logger.ErrorF("parse block data err :%s\n\t%v", err, string(message.Value()))
-					continue
-				}
-
-				logger.DebugF("offset %d process block :%d, tx %d", message.Offset(), block.Index, len(block.Transactions))
-
-				if err := etl.processBlock(block); err != nil {
-					logger.ErrorF("process block data err :%v", err)
-					continue
-				}
-
-				etl.consumer.Commit(message)
-			}
-		case err, ok := <-etl.consumer.Errors():
-			if ok {
-				logger.ErrorF("mq consumer detech err :%s", err)
-			}
-		case <-ticker.C:
-			logger.DebugF("etl consumer chan timeout")
-		}
-	}
-
-	close(etl.cached)
+// Produce implement mq producer interface
+func (etl *ETL) Produce(topic string, key []byte, content interface{}) error {
+	return etl.processBlock(content.(*neogo.Block))
 }
 
-// Stop stop etl
-func (etl *ETL) Stop() {
-	etl.stop = true
-}
-
-func (etl *ETL) processBlock(block *Block) (err error) {
+func (etl *ETL) processBlock(block *neogo.Block) (err error) {
 
 	dbTx, err := etl.db.Begin()
 
@@ -130,7 +78,7 @@ func (etl *ETL) processBlock(block *Block) (err error) {
 	return nil
 }
 
-func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *Block) (err error) {
+func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	var stmt *sql.Stmt
 	stmt, err = dbTx.Prepare(pq.CopyIn(etl.tbtx, "tx", "address", "type", "assert"))
 
@@ -172,7 +120,7 @@ func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *Block) (err error) {
 	return
 }
 
-func (etl *ETL) marktedVinUTXO(dbTx *sql.Tx, block *Block) (err error) {
+func (etl *ETL) marktedVinUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	var stmt *sql.Stmt
 
 	sqlStr := fmt.Sprintf(`update %s set "used"=TRUE where "tx"=$1 and "n"=$2`, etl.tbutxo)
@@ -202,9 +150,9 @@ func (etl *ETL) marktedVinUTXO(dbTx *sql.Tx, block *Block) (err error) {
 	return
 }
 
-func (etl *ETL) bulkInsertUTXO(dbTx *sql.Tx, block *Block) (err error) {
+func (etl *ETL) bulkInsertUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	var stmt *sql.Stmt
-	stmt, err = dbTx.Prepare(pq.CopyIn(etl.tbutxo, "tx", "n", "address", "assert", "value", "json"))
+	stmt, err = dbTx.Prepare(pq.CopyIn(etl.tbutxo, "tx", "n", "address", "assert", "value", "json", "createTime"))
 
 	if err != nil {
 		logger.ErrorF("utxo bulk prepare error :%s", err)
@@ -218,7 +166,7 @@ func (etl *ETL) bulkInsertUTXO(dbTx *sql.Tx, block *Block) (err error) {
 	for _, tx := range block.Transactions {
 		for _, vout := range tx.Vout {
 
-			utxo := &UTXO{
+			utxo := &neogo.UTXO{
 				TransactionID: tx.ID,
 				Vout:          vout,
 			}
@@ -229,7 +177,15 @@ func (etl *ETL) bulkInsertUTXO(dbTx *sql.Tx, block *Block) (err error) {
 				logger.ErrorF("utxo marshal error :%s", err)
 			}
 
-			_, err = stmt.Exec(tx.ID, vout.N, vout.Address, vout.Asset, vout.Value, string(json))
+			_, err = stmt.Exec(
+				tx.ID,
+				vout.N,
+				vout.Address,
+				vout.Asset,
+				vout.Value,
+				string(json),
+				time.Unix(block.Time, 0).Format(time.RFC3339),
+			)
 
 			if err != nil {
 				logger.ErrorF("utxo bulk insert error :%s", err)

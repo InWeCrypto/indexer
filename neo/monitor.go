@@ -6,7 +6,8 @@ import (
 	"time"
 
 	"github.com/dynamicgo/config"
-	"github.com/inwecrypto/indexer/mq"
+	"github.com/inwecrypto/gomq"
+	"github.com/inwecrypto/neogo"
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
@@ -14,8 +15,8 @@ var localdbkey = []byte("cursor")
 
 // Monitor neo blockchain Monitor implement
 type Monitor struct {
-	rpc          *Client
-	producer     mq.Producer
+	rpc          *neogo.Client
+	producer     gomq.Producer
 	localdb      *leveldb.DB
 	pollinterval time.Duration
 	topic        string
@@ -26,7 +27,7 @@ type Monitor struct {
 }
 
 // NewMonitor create new neo blockchain Monitor
-func NewMonitor(cnf *config.Config, producer mq.Producer) (*Monitor, error) {
+func NewMonitor(cnf *config.Config, producer gomq.Producer) (*Monitor, error) {
 
 	db, err := leveldb.OpenFile(cnf.GetString("monitor.localdb", "./"), nil)
 
@@ -41,7 +42,7 @@ func NewMonitor(cnf *config.Config, producer mq.Producer) (*Monitor, error) {
 	}
 
 	Monitor := &Monitor{
-		rpc:          NewClient(cnf.GetString("monitor.rpc", "http://localhost:10332")),
+		rpc:          neogo.NewClient(cnf.GetString("monitor.rpc", "http://localhost:10332")),
 		producer:     producer,
 		localdb:      db,
 		pollinterval: time.Second * time.Duration(cnf.GetInt64("Monitor.poll.interval", 5)),
