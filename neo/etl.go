@@ -51,13 +51,15 @@ func (etl *ETL) processBlock(block *neogo.Block) (err error) {
 
 	defer func() {
 		if err != nil {
+			logger.Debug("rollback !!!!!!!!!!!!!!!!!!!!!!")
 			err1 := dbTx.Rollback()
+			logger.Debug("rollback success@@!!!!!!!!!!!!!!!!!!!!!!")
 			if err1 != nil {
 				logger.ErrorF("rollback error, %s", err1)
 			}
 		} else {
-			err = dbTx.Commit()
-			if err == nil {
+			err1 := dbTx.Commit()
+			if err1 == nil {
 				logger.DebugF("create indexer for block %d succeed", block.Index)
 			}
 		}
@@ -80,7 +82,7 @@ func (etl *ETL) processBlock(block *neogo.Block) (err error) {
 
 func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	var stmt *sql.Stmt
-	stmt, err = dbTx.Prepare(pq.CopyIn(etl.tbtx, "tx", "address", "type", "assert", "updateTime"))
+	stmt, err = dbTx.Prepare(pq.CopyIn(etl.tbtx, "blocks", "tx", "address", "type", "assert", "updateTime"))
 
 	if err != nil {
 		logger.ErrorF("tx bulk prepare error :%s", err)
@@ -88,7 +90,12 @@ func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	}
 
 	defer func() {
-		err = stmt.Close()
+		err1 := stmt.Close()
+
+		if err1 != nil {
+			logger.ErrorF("close stmt error, %s", err)
+		}
+
 	}()
 
 	for _, tx := range block.Transactions {
@@ -102,7 +109,7 @@ func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 
 			logger.DebugF("tx %s vout %d ", tx.ID, vout.N)
 
-			_, err = stmt.Exec(tx.ID, vout.Address, tx.Type, vout.Asset, time.Unix(block.Time, 0).Format(time.RFC3339))
+			_, err = stmt.Exec(block.Index, tx.ID, vout.Address, tx.Type, vout.Asset, time.Unix(block.Time, 0).Format(time.RFC3339))
 
 			if err != nil {
 				logger.ErrorF("tx insert error :%s", err)
@@ -133,7 +140,11 @@ func (etl *ETL) spendUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	}
 
 	defer func() {
-		err = stmt.Close()
+		err1 := stmt.Close()
+
+		if err1 != nil {
+			logger.ErrorF("close stmt error, %s", err)
+		}
 	}()
 
 	for _, tx := range block.Transactions {
@@ -164,7 +175,11 @@ func (etl *ETL) bulkInsertUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	}
 
 	defer func() {
-		err = stmt.Close()
+		err1 := stmt.Close()
+
+		if err1 != nil {
+			logger.ErrorF("close stmt error, %s", err)
+		}
 	}()
 
 	for _, tx := range block.Transactions {
