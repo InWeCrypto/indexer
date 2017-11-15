@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/dynamicgo/config"
@@ -13,10 +14,11 @@ import (
 
 // ETL neo indexer builtin etl service
 type ETL struct {
-	db     *sql.DB       // indexer database
-	rpc    *neogo.Client // neo client
-	tbutxo string        // utxo table
-	tbtx   string        //tx table
+	db      *sql.DB       // indexer database
+	rpc     *neogo.Client // neo client
+	tbutxo  string        // utxo table
+	tbtx    string        //tx table
+	tbblock string        // block table
 }
 
 // NewETL create new etl
@@ -28,9 +30,10 @@ func NewETL(cnf *config.Config) (*ETL, error) {
 	}
 
 	etl := &ETL{
-		db:     db,
-		tbutxo: cnf.GetString("dbwriter.tables.utxo", "NEO_UTXO"),
-		tbtx:   cnf.GetString("dbwriter.tables.tx", "NEO_TX"),
+		db:      db,
+		tbutxo:  cnf.GetString("dbwriter.tables.utxo", "NEO_UTXO"),
+		tbtx:    cnf.GetString("dbwriter.tables.tx", "NEO_TX"),
+		tbblock: cnf.GetString("dbwriter.tables.block", "NEO_BLOCK"),
 	}
 
 	return etl, nil
@@ -74,6 +77,10 @@ func (etl *ETL) processBlock(block *neogo.Block) (err error) {
 	}
 
 	if err = etl.bulkInsertTX(dbTx, block); err != nil {
+		return
+	}
+
+	if err = etl.bulkInsertBlocks(dbTx, block); err != nil {
 		return
 	}
 
@@ -122,6 +129,57 @@ func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 
 	if err != nil {
 		logger.ErrorF("tx bulk insert error :%s", err)
+	}
+
+	return
+}
+
+func (etl *ETL) bulkInsertBlocks(dbTx *sql.Tx, block *neogo.Block) (err error) {
+	var stmt *sql.Stmt
+
+	stmt, err = dbTx.Prepare(fmt.Sprintf(`insert into %s("id", "sysfee", "netfee", "createTime") values($1,$2,$3,$4)`, etl.tbblock))
+
+	if err != nil {
+		logger.ErrorF("block bulk prepare error :%s", err)
+		return err
+	}
+
+	defer func() {
+		err1 := stmt.Close()
+
+		if err1 != nil {
+			logger.ErrorF("close stmt error, %s", err)
+		}
+
+	}()
+
+	sysfee := float64(0)
+	netfee := float64(0)
+
+	for _, tx := range block.Transactions {
+		fee, err := strconv.ParseFloat(tx.SysFee, 8)
+
+		if err != nil {
+			logger.ErrorF("parse tx(%s) sysfee(%s) err, %s", tx.ID, tx.SysFee, err)
+			continue
+		}
+
+		sysfee += fee
+
+		fee, err = strconv.ParseFloat(tx.NetFee, 8)
+
+		if err != nil {
+			logger.ErrorF("parse tx(%s) netfee(%s) err, %s", tx.ID, tx.NetFee, err)
+			continue
+		}
+
+		netfee += fee
+	}
+
+	_, err = stmt.Exec(block.Index, sysfee, netfee, time.Unix(block.Time, 0).Format(time.RFC3339))
+
+	if err != nil {
+		logger.ErrorF("block bulk insert error :%s", err)
 	}
 
 	return

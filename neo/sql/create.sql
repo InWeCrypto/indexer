@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS NEO_BLOCK;
+
 DROP INDEX IF EXISTS NEO_TX_BLOCKS;
 DROP INDEX IF EXISTS NEO_TX_TYPE;
 DROP INDEX IF EXISTS NEO_TX_UID;
@@ -21,8 +23,10 @@ CREATE TABLE NEO_UTXO (
   "value"      NUMERIC      NOT NULL, -- utxo value
   "json"       JSONB        NOT NULL, -- raw data of utxo format as json
   "createTime" TIMESTAMP    NOT NULL, -- utxo create time
-  "spentTime"  TIMESTAMP -- utxo spent time
+  "spentTime"  TIMESTAMP ,-- utxo spent time
+  "claimed"   BOOLEAN NOT NULL DEFAULT FALSE -- claimed flag
 );
+
 
 CREATE INDEX NEO_UTXO_UID
   ON NEO_UTXO (tx, address, n);
@@ -32,6 +36,9 @@ CREATE INDEX NEO_UTXO_ASSET
 
 CREATE INDEX NEO_UTXO_BLOCKS
   ON NEO_UTXO (blocks);
+
+CREATE INDEX NEO_UTXO_TIMES
+  ON NEO_UTXO ("createTime","spentTime");
 
 
 CREATE TABLE NEO_TX (
@@ -54,3 +61,11 @@ CREATE INDEX NEO_TX_ASSET
 
 CREATE INDEX NEO_TX_BLOCKS
   ON NEO_TX (blocks);
+
+
+CREATE TABLE NEO_BLOCK(
+  "id"     BIGINT PRIMARY KEY, -- block id
+  "sysfee" DECIMAL NOT NULL DEFAULT 0,
+  "netfee" DECIMAL NOT NULL DEFAULT 0,
+  "createTime" TIMESTAMP    NOT NULL
+);
