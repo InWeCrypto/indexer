@@ -65,14 +65,6 @@ func (client *Client) GetAssetState(asset string) (state *AssetState, err error)
 	return
 }
 
-// GetBalance get balance using jsonrpc :http://docs.neo.org/zh-cn/node/api/getbalance.html
-func (client *Client) GetBalance(asset string) (state *Balance, err error) {
-
-	err = client.call("getbalance", &state, asset)
-
-	return
-}
-
 // GetConnectionCount get node's connection count http://docs.neo.org/zh-cn/node/api/getconnectioncount.html
 func (client *Client) GetConnectionCount() (count int, err error) {
 
@@ -134,6 +126,13 @@ func (client *Client) GetPeers() (data interface{}, err error) {
 // SendRawTransaction send raw transaction with jsonrpc api:http://docs.neo.org/zh-cn/node/api/sendrawtransaction.html
 func (client *Client) SendRawTransaction(data []byte) (status bool, err error) {
 	err = client.call("sendrawtransaction", &status, data)
+
+	return
+}
+
+// GetBalance extend rpc method get address's utxos
+func (client *Client) GetBalance(address string) (utxos []*UTXO, err error) {
+	err = client.call("balance", &utxos, address)
 
 	return
 }

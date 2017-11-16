@@ -105,6 +105,10 @@ type Transaction struct {
 type UTXO struct {
 	TransactionID string `json:"txid"`
 	Vout          Vout   `json:"vout"`
+	CreateTime    string `json:"createTime"`
+	SpentTime     string `json:"spentTime"`
+	Block         int64  `json:"block"`
+	SpentBlock    int64  `json:"spentBlock"`
 	value         *float64
 }
 
@@ -161,4 +165,12 @@ func (attr *TxAttr) Bytes() []byte {
 	buff.Write(attr.Data)
 
 	return buff.Bytes()
+}
+
+// BlockFee block
+type BlockFee struct {
+	ID         int64
+	SysFee     float64
+	NetFee     float64
+	CreateTime string
 }

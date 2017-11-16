@@ -190,7 +190,7 @@ func (etl *ETL) bulkInsertBlocks(dbTx *sql.Tx, block *neogo.Block, sysfee float6
 func (etl *ETL) spendUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	var stmt *sql.Stmt
 
-	sqlStr := fmt.Sprintf(`update %s set "spentTime"=$1 where "tx"=$2 and "n"=$3`, etl.tbutxo)
+	sqlStr := fmt.Sprintf(`update %s set "spentTime"=$1,"spentBlock"=$2 where "tx"=$3 and "n"=$4`, etl.tbutxo)
 
 	stmt, err = dbTx.Prepare(sqlStr)
 
@@ -211,6 +211,7 @@ func (etl *ETL) spendUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 		for _, vin := range tx.Vin {
 			_, err := stmt.Exec(
 				time.Unix(block.Time, 0).Format(time.RFC3339),
+				block.Index,
 				vin.TransactionID,
 				vin.Vout,
 			)

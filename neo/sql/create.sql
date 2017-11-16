@@ -19,6 +19,7 @@ CREATE TABLE NEO_UTXO (
   "n"          INT          NOT NULL,
   "address"    VARCHAR(128) NOT NULL, -- value out address
   "blocks"     BIGINT       NOT NULL, -- tx packaged block number
+  "spentBlock" BIGINT       NOT NULL DEFAULT -1,
   "assert"     VARCHAR(128) NOT NULL, -- asset type string
   "value"      NUMERIC      NOT NULL, -- utxo value
   "json"       JSONB        NOT NULL, -- raw data of utxo format as json
