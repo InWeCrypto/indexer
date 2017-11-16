@@ -76,6 +76,10 @@ func (etl *ETL) processBlock(sysfee float64, block *neogo.Block) (inc float64, e
 		return
 	}
 
+	if err = etl.claimUTXO(dbTx, block); err != nil {
+		return
+	}
+
 	if err = etl.bulkInsertTX(dbTx, block); err != nil {
 		return
 	}
@@ -221,6 +225,45 @@ func (etl *ETL) spendUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
 				return err
 			}
 		}
+	}
+
+	return
+}
+
+func (etl *ETL) claimUTXO(dbTx *sql.Tx, block *neogo.Block) (err error) {
+	var stmt *sql.Stmt
+
+	sqlStr := fmt.Sprintf(`update %s set "claimed"=TRUE where "tx"=$1 and "n"=$2`, etl.tbutxo)
+
+	stmt, err = dbTx.Prepare(sqlStr)
+
+	if err != nil {
+		logger.ErrorF("market utxo prepare error :%s", err)
+		return err
+	}
+
+	defer func() {
+		err1 := stmt.Close()
+
+		if err1 != nil {
+			logger.ErrorF("close stmt error, %s", err)
+		}
+	}()
+
+	for _, tx := range block.Transactions {
+
+		for _, claim := range tx.Claims {
+			_, err := stmt.Exec(
+				claim.TransactionID,
+				claim.Vout,
+			)
+
+			if err != nil {
+				logger.ErrorF("market utxo exec error :%s\n\tvin :%v", err, claim)
+				return err
+			}
+		}
+
 	}
 
 	return

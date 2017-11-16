@@ -86,6 +86,12 @@ type Vin struct {
 	Vout          int    `json:"Vout"`
 }
 
+// Claim .
+type Claim struct {
+	TransactionID string `json:"txid"`
+	Vout          int    `json:"vout"`
+}
+
 // Transaction .
 type Transaction struct {
 	ID         string        `json:"Txid"`
@@ -93,6 +99,7 @@ type Transaction struct {
 	Type       string        `json:"Type"`
 	Version    int64         `json:"Version"`
 	Attributes []interface{} `json:"Attributes"` //
+	Claims     []Claim       `json:"Claims"`
 	Vin        []Vin         `json:"Vin"`
 	Vout       []Vout        `json:"Vout"`
 	SysFee     string        `json:"Sys_fee"`
@@ -173,4 +180,11 @@ type BlockFee struct {
 	SysFee     float64
 	NetFee     float64
 	CreateTime string
+}
+
+// Unclaimed .
+type Unclaimed struct {
+	Unavailable float64
+	Available   float64
+	Claims      []*UTXO
 }

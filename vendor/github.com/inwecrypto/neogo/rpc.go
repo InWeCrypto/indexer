@@ -131,8 +131,15 @@ func (client *Client) SendRawTransaction(data []byte) (status bool, err error) {
 }
 
 // GetBalance extend rpc method get address's utxos
-func (client *Client) GetBalance(address string) (utxos []*UTXO, err error) {
-	err = client.call("balance", &utxos, address)
+func (client *Client) GetBalance(address string, asset string) (utxos []*UTXO, err error) {
+	err = client.call("balance", &utxos, address, asset)
+
+	return
+}
+
+// GetClaim get unclaimed utxos
+func (client *Client) GetClaim(address string) (unclaimed *Unclaimed, err error) {
+	err = client.call("claim", &unclaimed, address)
 
 	return
 }
