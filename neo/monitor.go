@@ -2,21 +2,22 @@ package neo
 
 import (
 	"encoding/binary"
+	"math"
 	"sync"
 	"time"
 
 	"github.com/dynamicgo/config"
-	"github.com/inwecrypto/gomq"
 	"github.com/inwecrypto/neogo"
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
 var localdbkey = []byte("cursor")
+var sysfeeKey = []byte("sysfee")
 
 // Monitor neo blockchain Monitor implement
 type Monitor struct {
 	rpc          *neogo.Client
-	producer     gomq.Producer
+	producer     *ETL
 	localdb      *leveldb.DB
 	pollinterval time.Duration
 	topic        string
@@ -27,7 +28,7 @@ type Monitor struct {
 }
 
 // NewMonitor create new neo blockchain Monitor
-func NewMonitor(cnf *config.Config, producer gomq.Producer) (*Monitor, error) {
+func NewMonitor(cnf *config.Config, producer *ETL) (*Monitor, error) {
 
 	db, err := leveldb.OpenFile(cnf.GetString("monitor.localdb", "./"), nil)
 
@@ -126,6 +127,7 @@ func (Monitor *Monitor) Stop() {
 
 func (Monitor *Monitor) syncBlockOnce() error {
 	cursor := Monitor.getCursor()
+	sysfee := Monitor.getSysFee()
 
 	logger.DebugF("sync block(%d) ...", cursor)
 
@@ -140,20 +142,26 @@ func (Monitor *Monitor) syncBlockOnce() error {
 
 	logger.DebugF("queue block(%s) ...", block.Hash)
 
-	err = Monitor.producer.Produce(Monitor.topic, []byte(block.Hash), block)
+	sysfee, err = Monitor.producer.Produce(sysfee, block)
 
 	if err != nil {
 		logger.ErrorF("queue block(%d,%s) failed !!!!, %s", cursor, block.Hash, err)
 		return err
 	}
 
-	logger.InfoF("sync block(%d,%s) success !!!! ", cursor, block.Hash)
-
 	if err := Monitor.setCursor(cursor + 1); err != nil {
 		logger.ErrorF("save cursor err,%s", err)
 
 		return err
 	}
+
+	if err := Monitor.setSysFee(sysfee); err != nil {
+		logger.ErrorF("save sysfee err,%s", err)
+
+		return err
+	}
+
+	logger.InfoF("sync block(%d,%s) success !!!! ", cursor, block.Hash)
 
 	return nil
 }
@@ -179,6 +187,34 @@ func (Monitor *Monitor) setCursor(cursor uint64) error {
 	binary.BigEndian.PutUint64(buff, cursor)
 
 	return Monitor.localdb.Put(localdbkey, buff, nil)
+}
+
+func (Monitor *Monitor) setSysFee(fee float64) error {
+	buff := make([]byte, 8)
+
+	bits := math.Float64bits(fee)
+	bytes := make([]byte, 8)
+	binary.LittleEndian.PutUint64(bytes, bits)
+
+	return Monitor.localdb.Put(sysfeeKey, buff, nil)
+}
+
+func (Monitor *Monitor) getSysFee() float64 {
+	buff, err := Monitor.localdb.Get(sysfeeKey, nil)
+
+	if err != nil {
+		logger.ErrorF("get Monitor sys fee error :%s", err)
+		return 0
+	}
+
+	if buff == nil {
+		logger.ErrorF("get Monitor sys fee error : fee not exists")
+		return 0
+	}
+
+	bits := binary.LittleEndian.Uint64(buff)
+
+	return math.Float64frombits(bits)
 }
 
 // Close .
