@@ -40,16 +40,15 @@ func NewETL(cnf *config.Config) (*ETL, error) {
 }
 
 // Produce implement mq producer interface
-func (etl *ETL) Produce(sysfee float64, block *neogo.Block) (float64, error) {
-	return etl.processBlock(sysfee, block)
+func (etl *ETL) Produce(block *neogo.Block) error {
+	return etl.processBlock(block)
 }
 
-func (etl *ETL) processBlock(sysfee float64, block *neogo.Block) (inc float64, err error) {
-	inc = sysfee
+func (etl *ETL) processBlock(block *neogo.Block) (err error) {
 	dbTx, err := etl.db.Begin()
 
 	if err != nil {
-		return sysfee, err
+		return err
 	}
 
 	defer func() {
@@ -84,7 +83,7 @@ func (etl *ETL) processBlock(sysfee float64, block *neogo.Block) (inc float64, e
 		return
 	}
 
-	if inc, err = etl.bulkInsertBlocks(dbTx, block, sysfee); err != nil {
+	if err = etl.bulkInsertBlocks(dbTx, block); err != nil {
 		return
 	}
 
@@ -138,9 +137,10 @@ func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	return
 }
 
-func (etl *ETL) bulkInsertBlocks(dbTx *sql.Tx, block *neogo.Block, sysfee float64) (inc float64, err error) {
+func (etl *ETL) bulkInsertBlocks(dbTx *sql.Tx, block *neogo.Block) (err error) {
 
-	inc = sysfee
+	sysfee := float64(0)
+	netfee := float64(0)
 
 	var stmt *sql.Stmt
 
@@ -148,7 +148,7 @@ func (etl *ETL) bulkInsertBlocks(dbTx *sql.Tx, block *neogo.Block, sysfee float6
 
 	if err != nil {
 		logger.ErrorF("block bulk prepare error :%s", err)
-		return 0, err
+		return err
 	}
 
 	defer func() {
@@ -159,8 +159,6 @@ func (etl *ETL) bulkInsertBlocks(dbTx *sql.Tx, block *neogo.Block, sysfee float6
 		}
 
 	}()
-
-	netfee := float64(0)
 
 	for _, tx := range block.Transactions {
 		fee, err := strconv.ParseFloat(tx.SysFee, 8)

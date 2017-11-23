@@ -127,7 +127,6 @@ func (Monitor *Monitor) Stop() {
 
 func (Monitor *Monitor) syncBlockOnce() error {
 	cursor := Monitor.getCursor()
-	sysfee := Monitor.getSysFee()
 
 	logger.DebugF("sync block(%d) ...", cursor)
 
@@ -142,7 +141,7 @@ func (Monitor *Monitor) syncBlockOnce() error {
 
 	logger.DebugF("queue block(%s) ...", block.Hash)
 
-	sysfee, err = Monitor.producer.Produce(sysfee, block)
+	err = Monitor.producer.Produce(block)
 
 	if err != nil {
 		logger.ErrorF("queue block(%d,%s) failed !!!!, %s", cursor, block.Hash, err)
@@ -151,12 +150,6 @@ func (Monitor *Monitor) syncBlockOnce() error {
 
 	if err := Monitor.setCursor(cursor + 1); err != nil {
 		logger.ErrorF("save cursor err,%s", err)
-
-		return err
-	}
-
-	if err := Monitor.setSysFee(sysfee); err != nil {
-		logger.ErrorF("save sysfee err,%s", err)
 
 		return err
 	}
