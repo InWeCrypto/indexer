@@ -25,6 +25,8 @@ func main() {
 
 	factory, err := aliyunlog.NewAliyunBackend(neocnf)
 
+	neo.OpenLogger()
+
 	if err != nil {
 		logger.ErrorF("create aliyun log backend err , %s", err)
 		return
