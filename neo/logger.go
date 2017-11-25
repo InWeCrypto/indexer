@@ -2,7 +2,7 @@ package neo
 
 import "github.com/dynamicgo/slf4go"
 
-var logger = slf4go.Get("neo-indexer")
+var logger slf4go.Logger
 
 // OpenLogger .
 func OpenLogger() {

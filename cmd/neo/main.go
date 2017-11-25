@@ -25,14 +25,14 @@ func main() {
 
 	factory, err := aliyunlog.NewAliyunBackend(neocnf)
 
-	neo.OpenLogger()
-
 	if err != nil {
 		logger.ErrorF("create aliyun log backend err , %s", err)
 		return
 	}
 
 	slf4go.Backend(factory)
+
+	neo.OpenLogger()
 
 	etl, err := neo.NewETL(neocnf)
 
