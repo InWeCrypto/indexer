@@ -10,11 +10,36 @@
 			"revisionTime": "2017-11-10T12:27:16Z"
 		},
 		{
+			"checksumSHA1": "fJl61EA6M1x8NG1lRgNyxegdQls=",
+			"origin": "github.com/dynamicgo/aliyunlog/vendor/github.com/aliyun/go-loghub",
+			"path": "github.com/aliyun/go-loghub",
+			"revision": "52c03acb69e0d9eb5d6d8f6233259b6f202e2317",
+			"revisionTime": "2017-11-24T16:40:48Z"
+		},
+		{
+			"checksumSHA1": "8dMf/LWTKUevSFeTpcs/Bq6ePcs=",
+			"origin": "github.com/dynamicgo/aliyunlog/vendor/github.com/cloudflare/golz4",
+			"path": "github.com/cloudflare/golz4",
+			"revision": "52c03acb69e0d9eb5d6d8f6233259b6f202e2317",
+			"revisionTime": "2017-11-24T16:40:48Z",
+			"tree": true
+		},
+		{
+			"path": "github.com/cloudflare/golz4^",
+			"revision": ""
+		},
+		{
 			"checksumSHA1": "OFu4xJEIjiI8Suu+j/gabfp+y6Q=",
 			"origin": "github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew",
 			"path": "github.com/davecgh/go-spew/spew",
 			"revision": "890a5c3458b43e6104ff5da8dfa139d013d77544",
 			"revisionTime": "2017-07-05T02:17:15Z"
+		},
+		{
+			"checksumSHA1": "gdKDoAjJ6qJ0Xc4SplV293yV5X8=",
+			"path": "github.com/dynamicgo/aliyunlog",
+			"revision": "52c03acb69e0d9eb5d6d8f6233259b6f202e2317",
+			"revisionTime": "2017-11-24T16:40:48Z"
 		},
 		{
 			"checksumSHA1": "E+FzCdR1luyoxc9XZ++leVgVbS8=",
@@ -27,6 +52,20 @@
 			"path": "github.com/dynamicgo/slf4go",
 			"revision": "baff4259548c37384c203a03ee15ea2bdae006d4",
 			"revisionTime": "2017-11-14T09:20:35Z"
+		},
+		{
+			"checksumSHA1": "wn2shNJMwRZpvuvkf1s7h0wvqHI=",
+			"origin": "github.com/dynamicgo/aliyunlog/vendor/github.com/gogo/protobuf/proto",
+			"path": "github.com/gogo/protobuf/proto",
+			"revision": "52c03acb69e0d9eb5d6d8f6233259b6f202e2317",
+			"revisionTime": "2017-11-24T16:40:48Z"
+		},
+		{
+			"checksumSHA1": "HmbftipkadrLlCfzzVQ+iFHbl6g=",
+			"origin": "github.com/dynamicgo/aliyunlog/vendor/github.com/golang/glog",
+			"path": "github.com/golang/glog",
+			"revision": "52c03acb69e0d9eb5d6d8f6233259b6f202e2317",
+			"revisionTime": "2017-11-24T16:40:48Z"
 		},
 		{
 			"checksumSHA1": "p/8vSviYF91gFflhrt5vkyksroo=",
