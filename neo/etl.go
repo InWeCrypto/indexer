@@ -104,6 +104,8 @@ func (etl *ETL) processBlock(block *neogo.Block) (err error) {
 
 		if err != nil {
 			logger.ErrorF("mq insert err :%s", err)
+		} else {
+			logger.DebugF("tx %s event send", tx.ID)
 		}
 	}
 
