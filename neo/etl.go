@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/dynamicgo/config"
+	"github.com/inwecrypto/gomq"
+	gomqkafka "github.com/inwecrypto/gomq-kafka"
 	"github.com/inwecrypto/neogo"
 	"github.com/lib/pq"
 )
@@ -19,6 +21,8 @@ type ETL struct {
 	tbutxo  string        // utxo table
 	tbtx    string        //tx table
 	tbblock string        // block table
+	mq      gomq.Producer // mq producer
+	topic   string        // mq topic
 }
 
 // NewETL create new etl
@@ -29,11 +33,19 @@ func NewETL(cnf *config.Config) (*ETL, error) {
 		return nil, err
 	}
 
+	mq, err := gomqkafka.NewAliyunProducer(cnf)
+
+	if err != nil {
+		return nil, err
+	}
+
 	etl := &ETL{
 		db:      db,
 		tbutxo:  cnf.GetString("dbwriter.tables.utxo", "NEO_UTXO"),
 		tbtx:    cnf.GetString("dbwriter.tables.tx", "NEO_TX"),
 		tbblock: cnf.GetString("dbwriter.tables.block", "NEO_BLOCK"),
+		mq:      mq,
+		topic:   cnf.GetString("aliyun.kafka.topic", "xxxx"),
 	}
 
 	return etl, nil
@@ -85,6 +97,14 @@ func (etl *ETL) processBlock(block *neogo.Block) (err error) {
 
 	if err = etl.bulkInsertBlocks(dbTx, block); err != nil {
 		return
+	}
+
+	for _, tx := range block.Transactions {
+		err = etl.mq.Produce(etl.topic, []byte(tx.ID), tx.ID)
+
+		if err != nil {
+			logger.ErrorF("mq insert err :%s", err)
+		}
 	}
 
 	return

@@ -10,11 +10,25 @@
 			"revisionTime": "2017-11-10T12:27:16Z"
 		},
 		{
+			"checksumSHA1": "vqTaEZndZ4SQNNX1nqQ36s4odgg=",
+			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/Shopify/sarama",
+			"path": "github.com/Shopify/sarama",
+			"revision": "7517ca26629b9001bb0127abfe4055b6074fabc0",
+			"revisionTime": "2017-11-14T10:02:20Z"
+		},
+		{
 			"checksumSHA1": "fJl61EA6M1x8NG1lRgNyxegdQls=",
 			"origin": "github.com/dynamicgo/aliyunlog/vendor/github.com/aliyun/go-loghub",
 			"path": "github.com/aliyun/go-loghub",
 			"revision": "52c03acb69e0d9eb5d6d8f6233259b6f202e2317",
 			"revisionTime": "2017-11-24T16:40:48Z"
+		},
+		{
+			"checksumSHA1": "NykgODYqok9ED1APp7mmN5w3GTg=",
+			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/bsm/sarama-cluster",
+			"path": "github.com/bsm/sarama-cluster",
+			"revision": "7517ca26629b9001bb0127abfe4055b6074fabc0",
+			"revisionTime": "2017-11-14T10:02:20Z"
 		},
 		{
 			"checksumSHA1": "8dMf/LWTKUevSFeTpcs/Bq6ePcs=",
@@ -54,6 +68,34 @@
 			"revisionTime": "2017-11-14T09:20:35Z"
 		},
 		{
+			"checksumSHA1": "y2Kh4iPlgCPXSGTCcFpzePYdzzg=",
+			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/eapache/go-resiliency/breaker",
+			"path": "github.com/eapache/go-resiliency/breaker",
+			"revision": "7517ca26629b9001bb0127abfe4055b6074fabc0",
+			"revisionTime": "2017-11-14T10:02:20Z"
+		},
+		{
+			"checksumSHA1": "WHl96RVZlOOdF4Lb1OOadMpw8ls=",
+			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/eapache/go-xerial-snappy",
+			"path": "github.com/eapache/go-xerial-snappy",
+			"revision": "7517ca26629b9001bb0127abfe4055b6074fabc0",
+			"revisionTime": "2017-11-14T10:02:20Z"
+		},
+		{
+			"checksumSHA1": "oCCs6kDanizatplM5e/hX76busE=",
+			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/eapache/queue",
+			"path": "github.com/eapache/queue",
+			"revision": "7517ca26629b9001bb0127abfe4055b6074fabc0",
+			"revisionTime": "2017-11-14T10:02:20Z"
+		},
+		{
+			"checksumSHA1": "/dtdwt1sRwJY3iQYu2hnR+zRzDI=",
+			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/goany/slf4go",
+			"path": "github.com/goany/slf4go",
+			"revision": "7517ca26629b9001bb0127abfe4055b6074fabc0",
+			"revisionTime": "2017-11-14T10:02:20Z"
+		},
+		{
 			"checksumSHA1": "wn2shNJMwRZpvuvkf1s7h0wvqHI=",
 			"origin": "github.com/dynamicgo/aliyunlog/vendor/github.com/gogo/protobuf/proto",
 			"path": "github.com/gogo/protobuf/proto",
@@ -72,6 +114,18 @@
 			"path": "github.com/golang/snappy",
 			"revision": "553a641470496b2327abcac10b36396bd98e45c9",
 			"revisionTime": "2017-02-15T23:32:05Z"
+		},
+		{
+			"checksumSHA1": "rM4S8j2jSDCRwRP93uKeDMdQBa4=",
+			"path": "github.com/inwecrypto/gomq",
+			"revision": "52e0a010c834d0d321578c72e7efe398c4bf2416",
+			"revisionTime": "2017-11-14T03:21:41Z"
+		},
+		{
+			"checksumSHA1": "FVZ4odVC5gOgcjg9oM6Rusdr9wY=",
+			"path": "github.com/inwecrypto/gomq-kafka",
+			"revision": "7517ca26629b9001bb0127abfe4055b6074fabc0",
+			"revisionTime": "2017-11-14T10:02:20Z"
 		},
 		{
 			"checksumSHA1": "RROIAUNEsm4vOuHEDwi76eK/TJ4=",
@@ -99,11 +153,32 @@
 			"revisionTime": "2017-10-22T19:20:43Z"
 		},
 		{
+			"checksumSHA1": "FGg99nQ56Fo3radSCuU1AeEUJug=",
+			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/pierrec/lz4",
+			"path": "github.com/pierrec/lz4",
+			"revision": "7517ca26629b9001bb0127abfe4055b6074fabc0",
+			"revisionTime": "2017-11-14T10:02:20Z"
+		},
+		{
+			"checksumSHA1": "zPWRjzsPeXCoqmidIcJtHbvrvRs=",
+			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/pierrec/xxHash/xxHash32",
+			"path": "github.com/pierrec/xxHash/xxHash32",
+			"revision": "7517ca26629b9001bb0127abfe4055b6074fabc0",
+			"revisionTime": "2017-11-14T10:02:20Z"
+		},
+		{
 			"checksumSHA1": "zKKp5SZ3d3ycKe4EKMNT0BqAWBw=",
 			"origin": "github.com/stretchr/testify/vendor/github.com/pmezard/go-difflib/difflib",
 			"path": "github.com/pmezard/go-difflib/difflib",
 			"revision": "890a5c3458b43e6104ff5da8dfa139d013d77544",
 			"revisionTime": "2017-07-05T02:17:15Z"
+		},
+		{
+			"checksumSHA1": "KAzbLjI9MzW2tjfcAsK75lVRp6I=",
+			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/rcrowley/go-metrics",
+			"path": "github.com/rcrowley/go-metrics",
+			"revision": "7517ca26629b9001bb0127abfe4055b6074fabc0",
+			"revisionTime": "2017-11-14T10:02:20Z"
 		},
 		{
 			"checksumSHA1": "mGbTYZ8dHVTiPTTJu3ktp+84pPI=",
