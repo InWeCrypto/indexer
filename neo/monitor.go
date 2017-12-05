@@ -109,6 +109,7 @@ func (Monitor *Monitor) Run() {
 			Monitor.mutex.Lock()
 		}
 
+		Monitor.cond.Wait()
 	}
 }
 
