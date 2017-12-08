@@ -139,9 +139,16 @@ func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 
 		for _, vout := range tx.Vout {
 
-			logger.DebugF("tx %s vout %d ", tx.ID, vout.N)
+			value, err := strconv.ParseFloat(vout.Value, 8)
 
-			_, err = stmt.Exec(block.Index, tx.ID, vout.Address, tx.Type, vout.Asset, vout.Value, time.Unix(block.Time, 0).Format(time.RFC3339))
+			if err != nil {
+				logger.ErrorF("tx insert error :%s", err)
+				return err
+			}
+
+			logger.DebugF("tx %s vout %d value %.8f", tx.ID, vout.N, value)
+
+			_, err = stmt.Exec(block.Index, tx.ID, vout.Address, tx.Type, vout.Asset, value, time.Unix(block.Time, 0).Format(time.RFC3339))
 
 			if err != nil {
 				logger.ErrorF("tx insert error :%s", err)
