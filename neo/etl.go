@@ -114,7 +114,7 @@ func (etl *ETL) processBlock(block *neogo.Block) (err error) {
 
 func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 	var stmt *sql.Stmt
-	stmt, err = dbTx.Prepare(pq.CopyIn(etl.tbtx, "blocks", "tx", "address", "type", "assert", "updateTime"))
+	stmt, err = dbTx.Prepare(pq.CopyIn(etl.tbtx, "blocks", "tx", "address", "type", "assert", "value", "updateTime"))
 
 	if err != nil {
 		logger.ErrorF("tx bulk prepare error :%s", err)
@@ -141,7 +141,7 @@ func (etl *ETL) bulkInsertTX(dbTx *sql.Tx, block *neogo.Block) (err error) {
 
 			logger.DebugF("tx %s vout %d ", tx.ID, vout.N)
 
-			_, err = stmt.Exec(block.Index, tx.ID, vout.Address, tx.Type, vout.Asset, time.Unix(block.Time, 0).Format(time.RFC3339))
+			_, err = stmt.Exec(block.Index, tx.ID, vout.Address, tx.Type, vout.Asset, vout.Value, time.Unix(block.Time, 0).Format(time.RFC3339))
 
 			if err != nil {
 				logger.ErrorF("tx insert error :%s", err)

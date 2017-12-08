@@ -50,6 +50,7 @@ CREATE TABLE NEO_TX (
   "tx"         VARCHAR(128) NOT NULL, -- tx by which the utxo created
   "address"    VARCHAR(128) NOT NULL, -- value out address
   "type"       VARCHAR(64)  NOT NULL, -- tx type
+  "value"      NUMERIC      NOT NULL, -- utxo value
   "assert"     VARCHAR(128) NOT NULL, -- asset type string
   "updateTime" TIMESTAMP    NOT NULL-- update time
 );
