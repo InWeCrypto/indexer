@@ -53,7 +53,20 @@ func NewETL(cnf *config.Config) (*ETL, error) {
 
 // Produce implement mq producer interface
 func (etl *ETL) Produce(block *neogo.Block) error {
-	return etl.processBlock(block)
+	if err := etl.processBlock(block); err != nil {
+		return err
+	}
+
+	for _, tx := range block.Transactions {
+		if err := etl.mq.Produce(etl.topic, []byte(tx.ID), tx.ID); err != nil {
+			logger.ErrorF("mq insert err :%s", err)
+			return err
+		}
+
+		logger.DebugF("tx %s event send", tx.ID)
+	}
+
+	return nil
 }
 
 func (etl *ETL) processBlock(block *neogo.Block) (err error) {
@@ -97,16 +110,6 @@ func (etl *ETL) processBlock(block *neogo.Block) (err error) {
 
 	if err = etl.bulkInsertBlocks(dbTx, block); err != nil {
 		return
-	}
-
-	for _, tx := range block.Transactions {
-		err = etl.mq.Produce(etl.topic, []byte(tx.ID), tx.ID)
-
-		if err != nil {
-			logger.ErrorF("mq insert err :%s", err)
-		} else {
-			logger.DebugF("tx %s event send", tx.ID)
-		}
 	}
 
 	return
