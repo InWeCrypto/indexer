@@ -155,22 +155,22 @@ func (etl *ETL) insertTx(block *neogo.Block) (err error) {
 
 	for _, tx := range block.Transactions {
 
-		for _, vout := range tx.Vout {
+		from := ""
 
-			from := ""
+		if len(tx.Vin) > 0 {
+			rawtx, err := etl.client.GetRawTransaction(tx.Vin[0].TransactionID)
+
+			if err != nil {
+				return err
+			}
+
+			from = rawtx.Vout[tx.Vin[0].Vout].Address
+		}
+
+		for _, vout := range tx.Vout {
 
 			if len(tx.Claims) > 0 {
 				from = vout.Address
-			}
-
-			if len(tx.Vin) > 0 {
-				rawtx, err := etl.client.GetRawTransaction(tx.Vin[0].TransactionID)
-
-				if err != nil {
-					return err
-				}
-
-				from = rawtx.Vout[tx.Vin[0].Vout].Address
 			}
 
 			utxos = append(utxos, &neodb.Tx{
@@ -182,18 +182,18 @@ func (etl *ETL) insertTx(block *neogo.Block) (err error) {
 				Value:      vout.Value,
 				CreateTime: time.Unix(block.Time, 0),
 			})
-		}
 
-		if len(utxos) >= 100 {
-			if err := etl.batchInsertTx(utxos); err != nil {
-				return err
+			if len(utxos) >= 100 {
+				if err := etl.batchInsertTx(utxos); err != nil {
+					return err
+				}
+
+				for _, utxo := range utxos {
+					etl.DebugF("create tx %s from %s to %s", utxo.TX, utxo.From, utxo.To)
+				}
+
+				utxos = make([]*neodb.Tx, 0)
 			}
-
-			for _, utxo := range utxos {
-				etl.DebugF("create tx %s from %s to %s", utxo.TX, utxo.From, utxo.To)
-			}
-
-			utxos = make([]*neodb.Tx, 0)
 		}
 	}
 
@@ -242,18 +242,18 @@ func (etl *ETL) spentUTXOs(block *neogo.Block) (err error) {
 				SpentTime:  &spentTime,
 				SpentBlock: block.Index,
 			})
-		}
 
-		if len(utxos) >= 100 {
-			if err := etl.updateUTXOs(utxos, "spent_block", "spent_time"); err != nil {
-				return err
+			if len(utxos) >= 100 {
+				if err := etl.updateUTXOs(utxos, "spent_block", "spent_time"); err != nil {
+					return err
+				}
+
+				for _, utxo := range utxos {
+					etl.DebugF("spent utxo %s %d", utxo.TX, utxo.N)
+				}
+
+				utxos = make([]*neodb.UTXO, 0)
 			}
-
-			for _, utxo := range utxos {
-				etl.DebugF("spent utxo %s %d", utxo.TX, utxo.N)
-			}
-
-			utxos = make([]*neodb.UTXO, 0)
 		}
 	}
 
@@ -281,18 +281,18 @@ func (etl *ETL) claimUTXOs(block *neogo.Block) (err error) {
 				N:       claim.Vout,
 				Claimed: true,
 			})
-		}
 
-		if len(utxos) >= 100 {
-			if err := etl.updateUTXOs(utxos, "claimed"); err != nil {
-				return err
+			if len(utxos) >= 100 {
+				if err := etl.updateUTXOs(utxos, "claimed"); err != nil {
+					return err
+				}
+
+				for _, utxo := range utxos {
+					etl.DebugF("claim utxo %s %s", utxo.TX, utxo.N)
+				}
+
+				utxos = make([]*neodb.UTXO, 0)
 			}
-
-			for _, utxo := range utxos {
-				etl.DebugF("claim utxo %s %s", utxo.TX, utxo.N)
-			}
-
-			utxos = make([]*neodb.UTXO, 0)
 		}
 	}
 
@@ -354,18 +354,18 @@ func (etl *ETL) insertUTXOs(block *neogo.Block) error {
 				SpentTime:   nil,
 				Claimed:     false,
 			})
-		}
 
-		if len(utxos) >= 100 {
-			if err := etl.batchInsert(utxos); err != nil {
-				return err
+			if len(utxos) >= 100 {
+				if err := etl.batchInsert(utxos); err != nil {
+					return err
+				}
+
+				for _, utxo := range utxos {
+					etl.DebugF("create utxo %s %d", utxo.TX, utxo.N)
+				}
+
+				utxos = make([]*neodb.UTXO, 0)
 			}
-
-			for _, utxo := range utxos {
-				etl.DebugF("create utxo %s %d", utxo.TX, utxo.N)
-			}
-
-			utxos = make([]*neodb.UTXO, 0)
 		}
 	}
 
