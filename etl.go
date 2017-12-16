@@ -334,6 +334,9 @@ func (etl *ETL) updateUTXOs(utxos []*neodb.UTXO, cols ...string) (err error) {
 }
 
 func (etl *ETL) insertUTXOs(block *neogo.Block) error {
+
+	etl.DebugF("start insert utxos")
+
 	utxos := make([]*neodb.UTXO, 0)
 
 	for _, tx := range block.Transactions {
@@ -375,6 +378,8 @@ func (etl *ETL) insertUTXOs(block *neogo.Block) error {
 			etl.DebugF("create utxo %s %d", utxo.TX, utxo.N)
 		}
 	}
+
+	etl.DebugF("finish insert utxos")
 
 	return nil
 }
