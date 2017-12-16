@@ -155,22 +155,22 @@ func (etl *ETL) insertTx(block *neogo.Block) (err error) {
 
 	for _, tx := range block.Transactions {
 
-		for _, vout := range tx.Vout {
+		from := ""
 
-			from := ""
+		if len(tx.Vin) > 0 {
+			rawtx, err := etl.client.GetRawTransaction(tx.Vin[0].TransactionID)
+
+			if err != nil {
+				return err
+			}
+
+			from = rawtx.Vout[tx.Vin[0].Vout].Address
+		}
+
+		for _, vout := range tx.Vout {
 
 			if len(tx.Claims) > 0 {
 				from = vout.Address
-			}
-
-			if len(tx.Vin) > 0 {
-				rawtx, err := etl.client.GetRawTransaction(tx.Vin[0].TransactionID)
-
-				if err != nil {
-					return err
-				}
-
-				from = rawtx.Vout[tx.Vin[0].Vout].Address
 			}
 
 			utxos = append(utxos, &neodb.Tx{
