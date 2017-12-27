@@ -10,18 +10,18 @@
 			"revisionTime": "2017-12-12T11:56:49Z"
 		},
 		{
-			"checksumSHA1": "vqTaEZndZ4SQNNX1nqQ36s4odgg=",
+			"checksumSHA1": "A6T/YIMYM2QVl8C72utF2whDJ+Q=",
 			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/Shopify/sarama",
 			"path": "github.com/Shopify/sarama",
-			"revision": "733a7bec73f91ef382c33d0497bcbc3a8a618db3",
-			"revisionTime": "2017-11-26T09:54:29Z"
+			"revision": "7f6f09309f9e0dd3e4b1d7be271c41fbad7586f9",
+			"revisionTime": "2017-12-27T13:49:16Z"
 		},
 		{
-			"checksumSHA1": "NykgODYqok9ED1APp7mmN5w3GTg=",
+			"checksumSHA1": "vWHFC42HW6ao7cJ6ihIyc+hZdVM=",
 			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/bsm/sarama-cluster",
 			"path": "github.com/bsm/sarama-cluster",
-			"revision": "733a7bec73f91ef382c33d0497bcbc3a8a618db3",
-			"revisionTime": "2017-11-26T09:54:29Z"
+			"revision": "7f6f09309f9e0dd3e4b1d7be271c41fbad7586f9",
+			"revisionTime": "2017-12-27T13:49:16Z"
 		},
 		{
 			"checksumSHA1": "8dMf/LWTKUevSFeTpcs/Bq6ePcs=",
@@ -34,8 +34,8 @@
 			"checksumSHA1": "mrz/kicZiUaHxkyfvC/DyQcr8Do=",
 			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/davecgh/go-spew/spew",
 			"path": "github.com/davecgh/go-spew/spew",
-			"revision": "733a7bec73f91ef382c33d0497bcbc3a8a618db3",
-			"revisionTime": "2017-11-26T09:54:29Z"
+			"revision": "7f6f09309f9e0dd3e4b1d7be271c41fbad7586f9",
+			"revisionTime": "2017-12-27T13:49:16Z"
 		},
 		{
 			"checksumSHA1": "KDfldpsD2gh6pQ2SdrpZlALUb1k=",
@@ -66,22 +66,22 @@
 			"checksumSHA1": "y2Kh4iPlgCPXSGTCcFpzePYdzzg=",
 			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/eapache/go-resiliency/breaker",
 			"path": "github.com/eapache/go-resiliency/breaker",
-			"revision": "733a7bec73f91ef382c33d0497bcbc3a8a618db3",
-			"revisionTime": "2017-11-26T09:54:29Z"
+			"revision": "7f6f09309f9e0dd3e4b1d7be271c41fbad7586f9",
+			"revisionTime": "2017-12-27T13:49:16Z"
 		},
 		{
 			"checksumSHA1": "WHl96RVZlOOdF4Lb1OOadMpw8ls=",
 			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/eapache/go-xerial-snappy",
 			"path": "github.com/eapache/go-xerial-snappy",
-			"revision": "733a7bec73f91ef382c33d0497bcbc3a8a618db3",
-			"revisionTime": "2017-11-26T09:54:29Z"
+			"revision": "7f6f09309f9e0dd3e4b1d7be271c41fbad7586f9",
+			"revisionTime": "2017-12-27T13:49:16Z"
 		},
 		{
 			"checksumSHA1": "oCCs6kDanizatplM5e/hX76busE=",
 			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/eapache/queue",
 			"path": "github.com/eapache/queue",
-			"revision": "733a7bec73f91ef382c33d0497bcbc3a8a618db3",
-			"revisionTime": "2017-11-26T09:54:29Z"
+			"revision": "7f6f09309f9e0dd3e4b1d7be271c41fbad7586f9",
+			"revisionTime": "2017-12-27T13:49:16Z"
 		},
 		{
 			"checksumSHA1": "YkpuNhq75eI7X98jjtYh5gfsnts=",
@@ -128,29 +128,29 @@
 			"revisionTime": "2017-11-14T03:21:41Z"
 		},
 		{
-			"checksumSHA1": "3KEBpDx4GWZATfkd+q9ROkqsvVA=",
+			"checksumSHA1": "0IPna6NdzJvLTMbsiZKy82RZGXE=",
 			"path": "github.com/inwecrypto/gomq-kafka",
-			"revision": "733a7bec73f91ef382c33d0497bcbc3a8a618db3",
-			"revisionTime": "2017-11-26T09:54:29Z"
+			"revision": "7f6f09309f9e0dd3e4b1d7be271c41fbad7586f9",
+			"revisionTime": "2017-12-27T13:49:16Z"
 		},
 		{
 			"checksumSHA1": "RROIAUNEsm4vOuHEDwi76eK/TJ4=",
 			"origin": "github.com/inwecrypto/neogo/vendor/github.com/inwecrypto/jsonrpc",
 			"path": "github.com/inwecrypto/jsonrpc",
-			"revision": "1cfd17cffa4467d5b568f2cace6e0f5571bda19d",
-			"revisionTime": "2017-12-14T09:09:01Z"
+			"revision": "c6400b1579079a2100a664763408399322e06096",
+			"revisionTime": "2017-12-27T03:30:41Z"
 		},
 		{
-			"checksumSHA1": "mCYd3L7euqXsYhuTWmDYjJzZNY8=",
+			"checksumSHA1": "OQoasmQkOigidOF3EKqcIR+EIuM=",
 			"path": "github.com/inwecrypto/neodb",
-			"revision": "a15558bacf74b227be7915f6e16240009c814a7f",
-			"revisionTime": "2017-12-14T10:37:06Z"
+			"revision": "e99dc62468471a7d2745406ed3afea2ed2db5e3b",
+			"revisionTime": "2017-12-27T03:07:35Z"
 		},
 		{
-			"checksumSHA1": "ImR+ikesV+HjObA1aNn1gHjbRjg=",
+			"checksumSHA1": "VuUoKJUSowxPWk/zbWKccL9hNsA=",
 			"path": "github.com/inwecrypto/neogo",
-			"revision": "1cfd17cffa4467d5b568f2cace6e0f5571bda19d",
-			"revisionTime": "2017-12-14T09:09:01Z"
+			"revision": "c6400b1579079a2100a664763408399322e06096",
+			"revisionTime": "2017-12-27T03:30:41Z"
 		},
 		{
 			"checksumSHA1": "3HVfwgLpCDH8JX211UWdrSi/GU4=",
@@ -159,31 +159,31 @@
 			"revisionTime": "2017-10-22T19:20:43Z"
 		},
 		{
-			"checksumSHA1": "ATnwV0POluBNQEMjPdylodz0oK0=",
+			"checksumSHA1": "AU3fA8Sm33Vj9PBoRPSeYfxLRuE=",
 			"path": "github.com/lib/pq/oid",
 			"revision": "b609790bd85edf8e9ab7e0f8912750a786177bcf",
 			"revisionTime": "2017-10-22T19:20:43Z"
 		},
 		{
-			"checksumSHA1": "FGg99nQ56Fo3radSCuU1AeEUJug=",
+			"checksumSHA1": "xKzx54LbkghuMauevGWevn5ip3w=",
 			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/pierrec/lz4",
 			"path": "github.com/pierrec/lz4",
-			"revision": "733a7bec73f91ef382c33d0497bcbc3a8a618db3",
-			"revisionTime": "2017-11-26T09:54:29Z"
+			"revision": "7f6f09309f9e0dd3e4b1d7be271c41fbad7586f9",
+			"revisionTime": "2017-12-27T13:49:16Z"
 		},
 		{
 			"checksumSHA1": "zPWRjzsPeXCoqmidIcJtHbvrvRs=",
 			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/pierrec/xxHash/xxHash32",
 			"path": "github.com/pierrec/xxHash/xxHash32",
-			"revision": "733a7bec73f91ef382c33d0497bcbc3a8a618db3",
-			"revisionTime": "2017-11-26T09:54:29Z"
+			"revision": "7f6f09309f9e0dd3e4b1d7be271c41fbad7586f9",
+			"revisionTime": "2017-12-27T13:49:16Z"
 		},
 		{
-			"checksumSHA1": "KAzbLjI9MzW2tjfcAsK75lVRp6I=",
+			"checksumSHA1": "6u6M+ydTkWgOlM+UK+wOYnHhpAU=",
 			"origin": "github.com/inwecrypto/gomq-kafka/vendor/github.com/rcrowley/go-metrics",
 			"path": "github.com/rcrowley/go-metrics",
-			"revision": "733a7bec73f91ef382c33d0497bcbc3a8a618db3",
-			"revisionTime": "2017-11-26T09:54:29Z"
+			"revision": "7f6f09309f9e0dd3e4b1d7be271c41fbad7586f9",
+			"revisionTime": "2017-12-27T13:49:16Z"
 		},
 		{
 			"checksumSHA1": "yHbyLpI/Meh0DGrmi8x6FrDxxUY=",

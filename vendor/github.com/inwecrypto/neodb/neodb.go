@@ -5,7 +5,7 @@ import "time"
 // Tx .
 type Tx struct {
 	ID         int64     `xorm:"pk autoincr"`
-	TX         string    `xorm:"notnull"`
+	TX         string    `xorm:"notnull index"`
 	From       string    `xorm:"index(from_to)"`
 	To         string    `xorm:"index(from_to)"`
 	Asset      string    `xorm:"notnull"`
@@ -36,8 +36,8 @@ func (tx *Block) TableName() string {
 // UTXO .
 type UTXO struct {
 	ID          int64      `xorm:"pk autoincr"`
-	TX          string     `xorm:"notnull"`
-	N           int        `xorm:"notnull"`
+	TX          string     `xorm:"notnull index(vout)"`
+	N           int        `xorm:"notnull index(vout)"`
 	Address     string     `xorm:"notnull"`
 	CreateBlock int64      `xorm:"notnull index"`
 	SpentBlock  int64      `xorm:"notnull index default (-1)"`
@@ -64,7 +64,7 @@ type Order struct {
 	Block       int64      `json:"blocks" xorm:"default (-1)"`
 	CreateTime  time.Time  `json:"createTime,omitempty" xorm:"TIMESTAMP notnull created"`
 	ConfirmTime *time.Time `json:"confirmTime,omitempty" xorm:"TIMESTAMP"`
-	Context     *string    `json:"context" xorm:"json"`
+	Context     *string    `json:"context" xorm:"TEXT"`
 }
 
 // TableName xorm table name
