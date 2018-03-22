@@ -153,7 +153,7 @@
 			"revisionTime": "2018-01-17T04:13:57Z"
 		},
 		{
-			"checksumSHA1": "RwSZEtmrS92g0xFk/IQItPIbwE0=",
+			"checksumSHA1": "SxQR8ycsSGxK+M6w9OcjNVPqjxo=",
 			"path": "github.com/inwecrypto/neogo/rpc",
 			"revision": "89d2a4d92e87932a88f7c7d835ca74b7678dac24",
 			"revisionTime": "2018-03-22T03:50:18Z"
@@ -165,7 +165,7 @@
 			"revisionTime": "2018-03-19T19:41:35Z"
 		},
 		{
-			"checksumSHA1": "ATnwV0POluBNQEMjPdylodz0oK0=",
+			"checksumSHA1": "AU3fA8Sm33Vj9PBoRPSeYfxLRuE=",
 			"path": "github.com/lib/pq/oid",
 			"revision": "b2004221932bd6b13167ef654c81cffac36f7537",
 			"revisionTime": "2018-03-19T19:41:35Z"
