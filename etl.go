@@ -211,9 +211,18 @@ func (etl *ETL) insertTx(block *rpc.Block) (err error) {
 
 				to := base58.CheckEncode(toBytes, 0x17)
 
-				valueBytes, err := hex.DecodeString(notification.State.Value[3].Value)
+				var value string
 
-				valueBytes = reverseBytes(valueBytes)
+				if notification.State.Value[3].Type == "ByteArray" {
+					valueBytes, err = hex.DecodeString(notification.State.Value[3].Value)
+
+					valueBytes = reverseBytes(valueBytes)
+
+					value = fmt.Sprintf("%d", new(big.Int).SetBytes(valueBytes))
+
+				} else {
+					value = notification.State.Value[3].Value
+				}
 
 				utxos = append(utxos, &neodb.Tx{
 					TX:         tx.ID,
@@ -221,7 +230,7 @@ func (etl *ETL) insertTx(block *rpc.Block) (err error) {
 					From:       from,
 					To:         to,
 					Asset:      contract,
-					Value:      fmt.Sprintf("%d", new(big.Int).SetBytes(valueBytes)),
+					Value:      value,
 					CreateTime: time.Unix(block.Time, 0),
 				})
 			}
