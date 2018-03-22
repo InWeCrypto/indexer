@@ -1,0 +1,1 @@
+go build github.com/inwecrypto/neogo/cmd/neogo && ./neogo "$@" 
