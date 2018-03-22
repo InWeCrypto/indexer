@@ -36,8 +36,8 @@ type Notification struct {
 
 // State .
 type State struct {
-	Type  string    `json:"type"`
-	Value []*ValueN `json:"value"`
+	Type  string      `json:"type"`
+	Value interface{} `json:"value,omitempty"`
 }
 
 // ValueN .

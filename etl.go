@@ -2,6 +2,7 @@ package indexer
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"math/big"
 	"strconv"
@@ -185,27 +186,49 @@ func (etl *ETL) insertTx(block *rpc.Block) (err error) {
 			for _, notification := range log.Notifications {
 				contract := notification.Contract
 
-				if len(notification.State.Value) != 4 {
+				_, ok := notification.State.Value.(string)
+
+				if ok {
 					continue
 				}
 
-				if notification.State.Value[0].Value != "7472616e73666572" {
-					continue
-				}
-
-				fromBytes, err := hex.DecodeString(notification.State.Value[1].Value)
+				data, err := json.Marshal(notification.State.Value)
 
 				if err != nil {
-					etl.ErrorF("decode nep5 from address %s error, %s", notification.State.Value[1].Value, err)
+					etl.ErrorF("decode nep5 err, %s", err)
+					continue
+				}
+
+				var values []*rpc.ValueN
+
+				err = json.Unmarshal(data, &values)
+
+				if err != nil {
+					etl.ErrorF("decode nep5 value err , %s", err)
+					continue
+				}
+
+				if len(values) != 4 {
+					continue
+				}
+
+				if values[0].Value != "7472616e73666572" {
+					continue
+				}
+
+				fromBytes, err := hex.DecodeString(values[1].Value)
+
+				if err != nil {
+					etl.ErrorF("decode nep5 from address %s error, %s", values[1].Value, err)
 					continue
 				}
 
 				from := base58.CheckEncode(fromBytes, 0x17)
 
-				toBytes, err := hex.DecodeString(notification.State.Value[2].Value)
+				toBytes, err := hex.DecodeString(values[2].Value)
 
 				if err != nil {
-					etl.ErrorF("decode nep5 to address %s error, %s", notification.State.Value[2].Value, err)
+					etl.ErrorF("decode nep5 to address %s error, %s", values[2].Value, err)
 					continue
 				}
 
@@ -213,11 +236,11 @@ func (etl *ETL) insertTx(block *rpc.Block) (err error) {
 
 				var value string
 
-				if notification.State.Value[3].Type == "ByteArray" {
-					valueBytes, err := hex.DecodeString(notification.State.Value[3].Value)
+				if values[3].Type == "ByteArray" {
+					valueBytes, err := hex.DecodeString(values[3].Value)
 
 					if err != nil {
-						etl.ErrorF("decode nep5 transfer value %s error, %s", notification.State.Value[3].Value, err)
+						etl.ErrorF("decode nep5 transfer value %s error, %s", values[3].Value, err)
 						continue
 					}
 
@@ -226,7 +249,7 @@ func (etl *ETL) insertTx(block *rpc.Block) (err error) {
 					value = fmt.Sprintf("%d", new(big.Int).SetBytes(valueBytes))
 
 				} else {
-					value = notification.State.Value[3].Value
+					value = values[3].Value
 				}
 
 				utxos = append(utxos, &neodb.Tx{
