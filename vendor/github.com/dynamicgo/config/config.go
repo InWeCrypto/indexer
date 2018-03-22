@@ -59,6 +59,23 @@ func (config *Config) Get(path string) Value {
 	return config.container.Path(path).Data()
 }
 
+// GetConfig get sub config
+func (config *Config) GetConfig(path string) *Config {
+	data := config.container.Path(path).Data()
+
+	if data == nil {
+		subConfig, _ := New([]byte(`{}`))
+
+		return subConfig
+	}
+
+	jsondata, _ := json.Marshal(data)
+
+	subConfig, _ := New(jsondata)
+
+	return subConfig
+}
+
 // GetObject get config value as object
 func (config *Config) GetObject(path string, v interface{}) error {
 

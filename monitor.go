@@ -6,7 +6,7 @@ import (
 
 	"github.com/dynamicgo/config"
 	"github.com/dynamicgo/slf4go"
-	"github.com/inwecrypto/neogo"
+	"github.com/inwecrypto/neogo/rpc"
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
@@ -15,7 +15,7 @@ var key = []byte("key")
 // Monitor indexer server
 type Monitor struct {
 	slf4go.Logger
-	client       *neogo.Client
+	client       *rpc.Client
 	etl          *ETL
 	pullDuration time.Duration
 	db           *leveldb.DB
@@ -23,7 +23,7 @@ type Monitor struct {
 
 // NewMonitor .
 func NewMonitor(conf *config.Config) (*Monitor, error) {
-	client := neogo.NewClient(conf.GetString("indexer.neo", "http://localhost:8545"))
+	client := rpc.NewClient(conf.GetString("indexer.neo", "http://localhost:8545"))
 
 	etl, err := newETL(conf)
 
@@ -37,20 +37,31 @@ func NewMonitor(conf *config.Config) (*Monitor, error) {
 		return nil, err
 	}
 
-	return &Monitor{
+	startindexer := uint64(conf.GetInt64("indexer.start", 0))
+
+	monitor := &Monitor{
 		Logger:       slf4go.Get("neo-monitor"),
 		client:       client,
 		etl:          etl,
 		pullDuration: time.Second * conf.GetDuration("indexer.pull", 4),
 		db:           db,
-	}, nil
+	}
+
+	if monitor.getCursor() < startindexer {
+		if err := monitor.setCursor(startindexer); err != nil {
+			return nil, err
+		}
+
+	}
+
+	return monitor, nil
 }
 
 // Run .
 func (monitor *Monitor) Run() {
 	ticker := time.NewTicker(monitor.pullDuration)
 
-	for _ = range ticker.C {
+	for range ticker.C {
 		monitor.DebugF("fetch geth last block number ...")
 		blocks, err := monitor.client.GetBlockCount()
 		monitor.DebugF("fetch geth last block number -- success, %d", blocks)
