@@ -216,6 +216,11 @@ func (etl *ETL) insertTx(block *rpc.Block) (err error) {
 				if notification.State.Value[3].Type == "ByteArray" {
 					valueBytes, err := hex.DecodeString(notification.State.Value[3].Value)
 
+					if err != nil {
+						etl.ErrorF("decode nep5 transfer value %s error, %s", notification.State.Value[3].Value, err)
+						continue
+					}
+
 					valueBytes = reverseBytes(valueBytes)
 
 					value = fmt.Sprintf("%d", new(big.Int).SetBytes(valueBytes))
