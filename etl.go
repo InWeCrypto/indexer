@@ -214,7 +214,7 @@ func (etl *ETL) insertTx(block *rpc.Block) (err error) {
 				var value string
 
 				if notification.State.Value[3].Type == "ByteArray" {
-					valueBytes, err = hex.DecodeString(notification.State.Value[3].Value)
+					valueBytes, err := hex.DecodeString(notification.State.Value[3].Value)
 
 					valueBytes = reverseBytes(valueBytes)
 
