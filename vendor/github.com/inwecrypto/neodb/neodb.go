@@ -38,14 +38,14 @@ type UTXO struct {
 	ID          int64      `xorm:"pk autoincr"`
 	TX          string     `xorm:"notnull index(vout)"`
 	N           int        `xorm:"notnull index(vout)"`
-	Address     string     `xorm:"notnull"`
+	Address     string     `xorm:"notnull index(unclaimed)"`
 	CreateBlock int64      `xorm:"notnull index"`
 	SpentBlock  int64      `xorm:"notnull index default (-1)"`
-	Asset       string     `xorm:"notnull index"`
+	Asset       string     `xorm:"notnull index(unclaimed)"`
 	Value       string     `xorm:"notnull"`
 	CreateTime  time.Time  `xorm:"TIMESTAMP notnull"`
 	SpentTime   *time.Time `xorm:"TIMESTAMP"`
-	Claimed     bool       `xorm:""`
+	Claimed     bool       `xorm:"index(unclaimed)"`
 }
 
 // TableName .

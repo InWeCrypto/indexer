@@ -1,17 +1,22 @@
 package indexer
 
 import (
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
+	"math/big"
 	"strconv"
+	"strings"
 	"time"
 
+	"github.com/btcsuite/btcutil/base58"
 	"github.com/dynamicgo/config"
 	"github.com/dynamicgo/slf4go"
 	"github.com/go-xorm/xorm"
 	"github.com/inwecrypto/gomq"
 	gomqkafka "github.com/inwecrypto/gomq-kafka"
 	"github.com/inwecrypto/neodb"
-	"github.com/inwecrypto/neogo"
+	"github.com/inwecrypto/neogo/rpc"
 )
 
 // ETL .
@@ -21,7 +26,7 @@ type ETL struct {
 	engine *xorm.Engine
 	mq     gomq.Producer // mq producer
 	topic  string
-	client *neogo.Client
+	client *rpc.Client
 }
 
 func newETL(conf *config.Config) (*ETL, error) {
@@ -55,12 +60,12 @@ func newETL(conf *config.Config) (*ETL, error) {
 		engine: engine,
 		mq:     mq,
 		topic:  conf.GetString("aliyun.kafka.topic", "xxxxx"),
-		client: neogo.NewClient(conf.GetString("indexer.neo", "http://localhost:8545")),
+		client: rpc.NewClient(conf.GetString("indexer.neo", "http://localhost:8545")),
 	}, nil
 }
 
 // Handle handle eth block
-func (etl *ETL) Handle(block *neogo.Block) error {
+func (etl *ETL) Handle(block *rpc.Block) error {
 
 	etl.DebugF("block %d tx %d", block.Index, len(block.Transactions))
 
@@ -100,7 +105,7 @@ func (etl *ETL) Handle(block *neogo.Block) error {
 	return nil
 }
 
-func (etl *ETL) insertBlock(block *neogo.Block) (err error) {
+func (etl *ETL) insertBlock(block *rpc.Block) (err error) {
 	sysfee := float64(0)
 	netfee := float64(0)
 
@@ -150,7 +155,7 @@ func netFeeToString(f float64) string {
 	return data
 }
 
-func (etl *ETL) insertTx(block *neogo.Block) (err error) {
+func (etl *ETL) insertTx(block *rpc.Block) (err error) {
 	utxos := make([]*neodb.Tx, 0)
 
 	for _, tx := range block.Transactions {
@@ -161,11 +166,108 @@ func (etl *ETL) insertTx(block *neogo.Block) (err error) {
 			rawtx, err := etl.client.GetRawTransaction(tx.Vin[0].TransactionID)
 
 			if err != nil {
+				etl.ErrorF("get tx %s vin error %s", tx.ID, err)
 				return err
 			}
 
 			from = rawtx.Vout[tx.Vin[0].Vout].Address
 		}
+
+		if tx.Type == "InvocationTransaction" {
+			log, err := etl.client.ApplicationLog(tx.ID)
+
+			if err != nil {
+				etl.ErrorF("get application %s log error %s", tx.ID, err)
+				continue
+			}
+
+			if strings.Contains(log.State, "FAULT") {
+				goto NEXT
+			}
+
+			for _, notification := range log.Notifications {
+				contract := notification.Contract
+
+				_, ok := notification.State.Value.(string)
+
+				if ok {
+					continue
+				}
+
+				data, err := json.Marshal(notification.State.Value)
+
+				if err != nil {
+					etl.ErrorF("decode nep5 err, %s", err)
+					continue
+				}
+
+				var values []*rpc.ValueN
+
+				err = json.Unmarshal(data, &values)
+
+				if err != nil {
+					etl.ErrorF("decode nep5 value err , %s", err)
+					continue
+				}
+
+				if len(values) != 4 {
+					continue
+				}
+
+				if values[0].Value != "7472616e73666572" {
+					continue
+				}
+
+				fromBytes, err := hex.DecodeString(values[1].Value)
+
+				if err != nil {
+					etl.ErrorF("decode nep5 from address %s error, %s", values[1].Value, err)
+					continue
+				}
+
+				from := base58.CheckEncode(fromBytes, 0x17)
+
+				toBytes, err := hex.DecodeString(values[2].Value)
+
+				if err != nil {
+					etl.ErrorF("decode nep5 to address %s error, %s", values[2].Value, err)
+					continue
+				}
+
+				to := base58.CheckEncode(toBytes, 0x17)
+
+				var value string
+
+				if values[3].Type == "ByteArray" {
+					valueBytes, err := hex.DecodeString(values[3].Value)
+
+					if err != nil {
+						etl.ErrorF("decode nep5 transfer value %s error, %s", values[3].Value, err)
+						continue
+					}
+
+					valueBytes = reverseBytes(valueBytes)
+
+					value = fmt.Sprintf("%d", new(big.Int).SetBytes(valueBytes))
+
+				} else {
+					value = values[3].Value
+				}
+
+				utxos = append(utxos, &neodb.Tx{
+					TX:         tx.ID,
+					Block:      uint64(block.Index),
+					From:       from,
+					To:         to,
+					Asset:      contract,
+					Value:      value,
+					CreateTime: time.Unix(block.Time, 0),
+				})
+			}
+
+		}
+
+	NEXT:
 
 		for _, vout := range tx.Vout {
 
@@ -228,7 +330,15 @@ func (etl *ETL) batchInsertTx(rows []*neodb.Tx) (err error) {
 	return
 }
 
-func (etl *ETL) spentUTXOs(block *neogo.Block) (err error) {
+func reverseBytes(s []byte) []byte {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+
+	return s
+}
+
+func (etl *ETL) spentUTXOs(block *rpc.Block) (err error) {
 	utxos := make([]*neodb.UTXO, 0)
 
 	for _, tx := range block.Transactions {
@@ -270,7 +380,7 @@ func (etl *ETL) spentUTXOs(block *neogo.Block) (err error) {
 	return
 }
 
-func (etl *ETL) claimUTXOs(block *neogo.Block) (err error) {
+func (etl *ETL) claimUTXOs(block *rpc.Block) (err error) {
 	utxos := make([]*neodb.UTXO, 0)
 
 	for _, tx := range block.Transactions {
@@ -333,7 +443,7 @@ func (etl *ETL) updateUTXOs(utxos []*neodb.UTXO, cols ...string) (err error) {
 	return nil
 }
 
-func (etl *ETL) insertUTXOs(block *neogo.Block) error {
+func (etl *ETL) insertUTXOs(block *rpc.Block) error {
 
 	etl.DebugF("start insert utxos")
 
