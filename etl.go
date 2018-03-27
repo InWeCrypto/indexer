@@ -166,6 +166,7 @@ func (etl *ETL) insertTx(block *rpc.Block) (err error) {
 			rawtx, err := etl.client.GetRawTransaction(tx.Vin[0].TransactionID)
 
 			if err != nil {
+				etl.ErrorF("get tx %s vin error %s", tx.ID, err)
 				return err
 			}
 
@@ -176,7 +177,8 @@ func (etl *ETL) insertTx(block *rpc.Block) (err error) {
 			log, err := etl.client.ApplicationLog(tx.ID)
 
 			if err != nil {
-				return err
+				etl.ErrorF("get application %s log error %s", tx.ID, err)
+				continue
 			}
 
 			if strings.Contains(log.State, "FAULT") {
