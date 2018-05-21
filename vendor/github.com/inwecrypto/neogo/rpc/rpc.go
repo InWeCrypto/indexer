@@ -53,12 +53,12 @@ func (client *Client) call(method string, result interface{}, args ...interface{
 
 	buff.Reset()
 
-	responsedata, _ := json.Marshal(response)
+	// responsedata, _ := json.Marshal(response)
 
-	buff.WriteString(fmt.Sprintf("jsonrpc call: %s\n", method))
-	buff.WriteString(fmt.Sprintf("\tresult: %s\n", responsedata))
+	// buff.WriteString(fmt.Sprintf("jsonrpc call: %s\n", method))
+	// buff.WriteString(fmt.Sprintf("\tresult: %s\n", responsedata))
 
-	client.Debug(buff.String())
+	// client.Debug(buff.String())
 
 	return response.GetObject(result)
 }
